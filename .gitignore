@@ -14,7 +14,7 @@ env/
 
 # Archivos de configuración local y secretos (¡MUY IMPORTANTE!)
 # Si decides mover tus secretos a un archivo .env
-.env
+.env*
 
 # Archivos del sistema operativo
 .DS_Store

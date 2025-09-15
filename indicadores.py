@@ -34,7 +34,7 @@ def es_vela_elefante(df, multi=2.0):
     df['es_vela_elefante'] = criterio
     return df
 
-def calcular_indicadores(datos):
+def calcular_indicadores(datos, atr_period=14, multi_vela_elefante=2.0):
     df = pd.DataFrame(datos)
     df['time'] = pd.to_datetime(df['time'], unit='s')
     df.set_index('time', inplace=True)
@@ -45,9 +45,9 @@ def calcular_indicadores(datos):
     df['EMA_200'] = calcular_ema(df, 'close', 200)
     
     # Calcular el ATR de forma manual
-    df = calcular_atr(df, 14)
+    df = calcular_atr(df, periodo=atr_period)
     
     # Calcular si es una vela elefante
-    df = es_vela_elefante(df, multi=2.0)
+    df = es_vela_elefante(df, multi=multi_vela_elefante)
     
     return df

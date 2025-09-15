@@ -1,6 +1,11 @@
 # notificaciones.py
 # Notificaciones por WhatsApp (Twilio) y Telegram, activables/desactivables
+from dotenv import load_dotenv
 import os
+import requests
+
+# Cargar variables de entorno desde el archivo .env
+load_dotenv()
 
 # --- ACTIVACIÓN DE CANALES ---
 NOTIFICAR_WHATSAPP = False
@@ -33,11 +38,8 @@ def enviar_whatsapp_mensaje(mensaje):
         print(f"[WHATSAPP] Error al enviar mensaje: {e}")
 
 # --- TELEGRAM ---
-# TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
-# TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '')
-TELEGRAM_BOT_TOKEN = '7753325109:AAHgvKdngsCdCvfXxXJHMHnQfVGu5cVxSkU'
-TELEGRAM_CHAT_ID = '-4874137973'
-import requests
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 def enviar_telegram_mensaje(mensaje):
     if not (NOTIFICAR_TELEGRAM and TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID):

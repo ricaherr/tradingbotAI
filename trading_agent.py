@@ -9,88 +9,29 @@ from notificaciones import enviar_notificacion
 from gestor_riesgo_en_operacion import GestorRiesgoEnOperacion
 from gestion_riesgo import GestionRiesgo
 from registro_operaciones import registrar_operacion_abierta, monitorear_y_registrar_operaciones_cerradas, ordenes_en_curso
-from indicadores import calcular_indicadores
+from indicadores import calcular_indicadores, es_vela_elefante
 import pytz
 
-# --- VARIABLES GLOBALES Y CONFIGURACIÓN ---
-PARES_A_OPERAR = ["EURUSD", "GBPUSD", "USDJPY"]
-TIMEFRAME = mt5.TIMEFRAME_M1
-NUM_VELAS = 200
-MULTI_VELA_ELEFANTE = 2.0
-ATR_PERIOD = 14
-RIESGO_PORCENTAJE = 1
-CAPITAL_INICIAL = 11000 
-MAX_LOTE = 0.1
-MIN_LOTE = 0.01
-MONEDA_DE_CUENTA = "USD"
-MAX_SPREAD_PORCENTAJE_BENEFICIO = 0.0
-VALIDAR_SPREAD = False
-PERDIDA_MAXIMA_DIARIA = 0.02
-MAX_OPERACIONES_SIMULTANEAS = 5
-# Configuración del Trailing Stop y Break-Even Dinámico
-TRAILING_ACTIVO = True
-BREAK_EVEN_ACTIVO = True
-BREAK_EVEN_ATR_FACTOR = 0.5 # Mover a break-even cuando el beneficio es 0.5 veces el ATR
-TRAILING_ATR_FACTOR = 1.0   # Mantener el trailing stop a 1.0 veces el ATR
-# NUEVA VARIABLE: Desviación dinámica en función del ATR
-DEVIATION_ATR_FACTOR = 0.1 # Multiplicador del ATR para la desviación
-# NUEVO: Configuración para la reducción de posición
-REDUCIR_POSICION_ACTIVO = True
-PERDIDAS_CONSECUTIVAS_REDUCCION = 3 # Reducir lote después de 3 pérdidas consecutivas
-FACTOR_REDUCCION_LOTE = 0.75 # Reducir el lote al 75%
-
-# Obtener el directorio de la carpeta Documentos del usuario
-directorio_documentos = os.path.join(os.path.expanduser("~"), "Documents")
-log_file_path = os.path.join(directorio_documentos, "trading_agent.log")
-OPERACIONES_CSV = os.path.join(os.path.dirname(__file__), 'operaciones_trading.csv')
+# --- IMPORTAR CONFIGURACIÓN ---
+import config
 
 # --- CONFIGURACIÓN DEL REGISTRO ---
 logging.basicConfig(
-    filename=log_file_path,
+    filename=config.LOG_FILE_PATH,
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     filemode="a"
 )
 
 # Crear el archivo de operaciones si no existe
-if not os.path.isfile(OPERACIONES_CSV):
+if not os.path.isfile(config.OPERACIONES_CSV):
     columnas = [
         'ticket_mt5', 'simbolo', 'estrategia', 'fecha_apertura', 'fecha_cierre', 'tipo', 'precio_apertura',
         'precio_cierre', 'resultado_dinero', 'resultado_pips', 'stop_loss', 'take_profit', 'lote', 'comentario'
     ]
-    with open(OPERACIONES_CSV, 'w', newline='') as f:
+    with open(config.OPERACIONES_CSV, 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=columnas)
         writer.writeheader()
-
-# --- CONFIGURACIÓN DE LAS ESTRATEGIAS ---
-ESTRATEGIAS = [
-    {
-        "nombre": "Cruce EMA + Vela Elefante",
-        "activa": True,
-        "criterios": {
-            "usar_cruce_emas": True,
-            "usar_vela_elefante": True
-        },
-        "pares": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY"]
-    },
-    {
-        "nombre": "Rompimiento de la EMA 20",
-        "activa": True,
-        "criterios": {
-            "usar_vela_elefante": True
-        },
-        "pares": ["EURUSD", "GBPUSD", "USDJPY"]
-    },
-    {
-        "nombre": "Reversión a la Media",
-        "activa": True,
-        "criterios": {
-            "usar_reversion_20_ema": True,
-            "usar_filtro_tendencia_200_ema": True
-        },
-        "pares": ["EURUSD", "USDJPY", "AUDUSD", "NZDUSD"]
-    }
-]
 
 # --- FUNCIONES AUXILIARES ---
 def conectar_mt5():
@@ -133,7 +74,7 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
     Calcula el tamaño del lote basado en el riesgo, la distancia del SL y el capital.
     Ahora incluye un factor de reducción basado en pérdidas consecutivas y validación de lote.
     """
-    if mt5.positions_total() >= MAX_OPERACIONES_SIMULTANEAS:
+    if mt5.positions_total() >= config.MAX_OPERACIONES_SIMULTANEAS:
         logging.warning(f"Máximo de operaciones simultáneas ({MAX_OPERACIONES_SIMULTANEAS}) alcanzado. No se puede abrir una nueva orden en {simbolo}.")
         print(f"⚠️ Máximo de operaciones simultáneas alcanzado. Esperando...")
         return
@@ -150,11 +91,11 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
 
     precio_actual = tick.bid if tipo_orden == mt5.ORDER_TYPE_BUY else tick.ask
 
-    if VALIDAR_SPREAD:
+    if config.VALIDAR_SPREAD:
         spread = symbol_info.spread * symbol_info.point
         beneficio_potencial_en_dinero = abs(take_profit - precio_actual) / symbol_info.point * mt5.symbol_info_tick(simbolo).bid * 100000
         spread_en_dinero = spread * mt5.symbol_info_tick(simbolo).bid * 100000
-        if spread_en_dinero / beneficio_potencial_en_dinero > MAX_SPREAD_PORCENTAJE_BENEFICIO:
+        if spread_en_dinero / beneficio_potencial_en_dinero > config.MAX_SPREAD_PORCENTAJE_BENEFICIO:
             print(f"⚠️ Spread demasiado alto en {simbolo}. Operación cancelada.")
             return
 
@@ -171,15 +112,15 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
     
     lote_final = (riesgo_dinero / (distancia_stop_pips * valor_pip)) * factor_reduccion
     
-    if lote_final < MIN_LOTE:
-        print(f"⚠️ Lote calculado ({lote_final:.4f}) es menor que el mínimo permitido ({MIN_LOTE:.2f}). Se ajustará al mínimo.")
-        lote_final = MIN_LOTE
+    if lote_final < config.MIN_LOTE:
+        print(f"⚠️ Lote calculado ({lote_final:.4f}) es menor que el mínimo permitido ({config.MIN_LOTE:.2f}). Se ajustará al mínimo.")
+        lote_final = config.MIN_LOTE
 
     lote_final = max(symbol_info.volume_min, min(lote_final, symbol_info.volume_max))
     
     lote_final = round(lote_final, 2)
     
-    if lote_final < MIN_LOTE:
+    if lote_final < config.MIN_LOTE:
         logging.warning(f"El lote final ({lote_final}) es menor que el lote mínimo. No se ejecutará la orden.")
         return
     
@@ -237,29 +178,29 @@ def calcular_lote(capital, riesgo_porcentaje, stop_loss, simbolo, tipo_orden, in
     precio_actual = mt5.symbol_info_tick(simbolo).ask if tipo_orden == mt5.ORDER_TYPE_BUY else mt5.symbol_info_tick(simbolo).bid
     
     if stop_loss is None or stop_loss == 0.0 or stop_loss == precio_actual:
-        logging.warning("Stop Loss inválido. No se puede calcular el lote. Usando lote mínimo.")
+        logging.warning(f"Stop Loss inválido. No se puede calcular el lote. Usando lote mínimo: {config.MIN_LOTE}")
         return 0.01
 
     tamaño_pip = info_simbolo.point
     distancia_pips = abs(precio_actual - stop_loss) / tamaño_pip
 
     if distancia_pips <= 0:
-        logging.warning("Distancia de stop loss es cero o negativa. No se puede calcular el lote. Usando lote mínimo.")
+        logging.warning(f"Distancia de stop loss es cero o negativa. No se puede calcular el lote. Usando lote mínimo: {config.MIN_LOTE}")
         return 0.01
 
     riesgo_dinero = capital * (riesgo_porcentaje / 100)
     valor_pip_lote = 10 # Valor del pip por lote estándar para pares con USD al final (ej. EURUSD)
 
     # Verificar si el par tiene la moneda de cuenta al principio
-    if MONEDA_DE_CUENTA in simbolo:
+    if config.MONEDA_DE_CUENTA in simbolo:
         valor_pip_lote = 1 # Para pares como USDJPY, USDCHF
 
     lote = riesgo_dinero / (distancia_pips * valor_pip_lote)
     lote = round(lote, 2)
     
     # Validar que el lote no exceda el máximo y esté dentro de los límites
-    if lote > MAX_LOTE:
-        lote = MAX_LOTE
+    if lote > config.MAX_LOTE:
+        lote = config.MAX_LOTE
     
     if lote < mt5.symbol_info(simbolo).volume_min:
         logging.warning(f"El lote calculado ({lote}) es menor al mínimo. Usando lote mínimo: {mt5.symbol_info(simbolo).volume_min}")
@@ -302,10 +243,9 @@ def determinar_senales(df, estrategia):
 
     # Lógica para la estrategia 'Cruce EMA + Vela Elefante'
     if estrategia["nombre"] == "Cruce EMA + Vela Elefante":
-        criterios = estrategia["criterios"]
         if not all(k in df.columns for k in ['EMA_9', 'EMA_20', 'es_vela_elefante']):
             return None
-        
+
         cruce_alcista = df['EMA_9'].iloc[-2] < df['EMA_20'].iloc[-2] and ultima_vela['EMA_9'] > ultima_vela['EMA_20']
         cruce_bajista = df['EMA_9'].iloc[-2] > df['EMA_20'].iloc[-2] and ultima_vela['EMA_9'] < ultima_vela['EMA_20']
         es_elefante = ultima_vela['es_vela_elefante']
@@ -317,7 +257,6 @@ def determinar_senales(df, estrategia):
 
     # Lógica para la estrategia 'Rompimiento de la EMA 20'
     elif estrategia["nombre"] == "Rompimiento de la EMA 20":
-        criterios = estrategia["criterios"]
         if not all(k in df.columns for k in ['EMA_20', 'es_vela_elefante']):
             return None
         
@@ -334,13 +273,13 @@ def determinar_senales(df, estrategia):
     
     # Lógica para la estrategia 'Reversión a la Media'
     elif estrategia["nombre"] == "Reversión a la Media":
-        criterios = estrategia["criterios"]
+        criterios = estrategia.get("criterios", {})
         if 'EMA_20' not in df.columns:
             return None
         
         precio_sobre_ema200 = True
         precio_bajo_ema200 = True
-        if criterios.get("usar_filtro_tendencia_200_ema"):
+        if criterios.get("usar_filtro_tendencia_200_ema", False):
             if 'EMA_200' not in df.columns or len(df) < 200:
                 print("No hay suficientes datos para la EMA de 200. Desactivando filtro de tendencia.")
             else:
@@ -381,7 +320,7 @@ def main():
     if not conectar_mt5():
         return
     
-    estrategias_activas = [e for e in ESTRATEGIAS if e.get("activa", False)]
+    estrategias_activas = [e for e in config.ESTRATEGIAS if e.get("activa", False)]
     if not estrategias_activas:
         logging.warning("No hay estrategias activas. Deteniendo el agente.")
         print("🛑 No hay estrategias activas. Deteniendo el agente.")
@@ -390,21 +329,21 @@ def main():
 
     # NUEVO: Inicializar la gestión de riesgo global
     gestor_riesgo_global = GestionRiesgo(
-        limite_global=PERDIDA_MAXIMA_DIARIA,
+        limite_global=config.PERDIDA_MAXIMA_DIARIA,
         modo_porcentaje=True,
-        capital_inicial=CAPITAL_INICIAL,
-        reducir_posicion_activo=REDUCIR_POSICION_ACTIVO,
-        perdidas_consecutivas_reduccion=PERDIDAS_CONSECUTIVAS_REDUCCION,
-        factor_reduccion=FACTOR_REDUCCION_LOTE
+        capital_inicial=config.CAPITAL_INICIAL,
+        reducir_posicion_activo=config.REDUCIR_POSICION_ACTIVO,
+        perdidas_consecutivas_reduccion=config.PERDIDAS_CONSECUTIVAS_REDUCCION,
+        factor_reduccion=config.FACTOR_REDUCCION_LOTE
     )
     # Cargar el historial del CSV para saber si los límites de pérdidas se han alcanzado
-    gestor_riesgo_global.cargar_desde_csv(OPERACIONES_CSV)
+    gestor_riesgo_global.cargar_desde_csv(config.OPERACIONES_CSV)
     
     gestor_riesgo_op = GestorRiesgoEnOperacion(
-        modo_trailing=TRAILING_ACTIVO,
-        break_even_activo=BREAK_EVEN_ACTIVO,
-        atr_factor_break_even=BREAK_EVEN_ATR_FACTOR,
-        atr_factor_trailing=TRAILING_ATR_FACTOR,
+        modo_trailing=config.TRAILING_ACTIVO,
+        break_even_activo=config.BREAK_EVEN_ACTIVO,
+        atr_factor_break_even=config.BREAK_EVEN_ATR_FACTOR,
+        atr_factor_trailing=config.TRAILING_ATR_FACTOR,
     )
 
     logging.info("Agente de trading iniciado. Monitoreando varios pares...")
@@ -429,7 +368,7 @@ def main():
                         continue
                     
                     # Obtener los datos más recientes para el ATR
-                    datos_operacion = obtener_datos(operacion.symbol, TIMEFRAME, NUM_VELAS)
+                    datos_operacion = obtener_datos(operacion.symbol, config.TIMEFRAME, config.NUM_VELAS)
                     if datos_operacion is None:
                         logging.warning(f"No se pudieron obtener datos para el símbolo de la operación {operacion.symbol}.")
                         continue
@@ -482,7 +421,7 @@ def main():
             # Bucle para cada estrategia activa
             for estrategia in estrategias_activas:
                 nombre_estrategia = estrategia["nombre"]
-                pares_a_operar = estrategia.get("pares", PARES_A_OPERAR)
+                pares_a_operar = estrategia.get("pares", config.PARES_A_OPERAR)
                 
                 # NUEVO: Verificar si la estrategia puede operar
                 if not gestor_riesgo_global.puede_operar(nombre_estrategia):
@@ -494,12 +433,12 @@ def main():
                 for par in pares_a_operar:
                     logging.info(f"Analizando '{par}' con la estrategia: '{nombre_estrategia}'")
                     
-                    datos = obtener_datos(par, TIMEFRAME, NUM_VELAS)
+                    datos = obtener_datos(par, config.TIMEFRAME, config.NUM_VELAS)
                     if datos is None or len(datos) < 2:
                         logging.warning(f"No se pudieron obtener datos suficientes para {par}.")
                         continue
                     
-                    df = calcular_indicadores(datos)
+                    df = calcular_indicadores(datos, atr_period=config.ATR_PERIOD, multi_vela_elefante=config.MULTI_VELA_ELEFANTE)
 
                     # Determinar la señal
                     senal = determinar_senales(df, estrategia)
@@ -517,8 +456,8 @@ def main():
                             tipo_orden=tipo_orden,
                             stop_loss=stop_loss,
                             take_profit=take_profit,
-                            capital=CAPITAL_INICIAL,
-                            riesgo_porcentaje=RIESGO_PORCENTAJE,
+                            capital=config.CAPITAL_INICIAL,
+                            riesgo_porcentaje=config.RIESGO_PORCENTAJE,
                             nombre_estrategia=nombre_estrategia,
                             gestor_riesgo_global=gestor_riesgo_global # NUEVO: Pasamos la instancia
                         )
