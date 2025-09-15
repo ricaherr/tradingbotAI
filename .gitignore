@@ -1,0 +1,20 @@
+# Archivos de cache de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+env/
+
+# Archivos de log y bases de datos
+*.log
+*.csv
+
+# Archivos de configuración local y secretos (¡MUY IMPORTANTE!)
+# Si decides mover tus secretos a un archivo .env
+.env
+
+# Archivos del sistema operativo
+.DS_Store
