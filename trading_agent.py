@@ -10,6 +10,8 @@ from gestor_riesgo_en_operacion import GestorRiesgoEnOperacion
 from gestion_riesgo import GestionRiesgo
 from registro_operaciones import registrar_operacion_abierta, monitorear_y_registrar_operaciones_cerradas, ordenes_en_curso
 from indicadores import calcular_indicadores, es_vela_elefante
+from strategies import determinar_senales
+from order_calculations import calcular_riesgo_dinamico, calcular_lote
 import pytz
 
 # --- IMPORTAR CONFIGURACIÓN ---
@@ -172,129 +174,6 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
         # Enviar notificación de error
         mensaje_error = f"❌ ERROR en OPERACIÓN\nPar: {simbolo}\nError: {resultado.retcode} - {resultado.comment}"
         enviar_notificacion(mensaje_error)
-
-def calcular_lote(capital, riesgo_porcentaje, stop_loss, simbolo, tipo_orden, info_simbolo):
-    """Calcula el lote dinámicamente basado en el riesgo por operación."""
-    precio_actual = mt5.symbol_info_tick(simbolo).ask if tipo_orden == mt5.ORDER_TYPE_BUY else mt5.symbol_info_tick(simbolo).bid
-    
-    if stop_loss is None or stop_loss == 0.0 or stop_loss == precio_actual:
-        logging.warning(f"Stop Loss inválido. No se puede calcular el lote. Usando lote mínimo: {config.MIN_LOTE}")
-        return 0.01
-
-    tamaño_pip = info_simbolo.point
-    distancia_pips = abs(precio_actual - stop_loss) / tamaño_pip
-
-    if distancia_pips <= 0:
-        logging.warning(f"Distancia de stop loss es cero o negativa. No se puede calcular el lote. Usando lote mínimo: {config.MIN_LOTE}")
-        return 0.01
-
-    riesgo_dinero = capital * (riesgo_porcentaje / 100)
-    valor_pip_lote = 10 # Valor del pip por lote estándar para pares con USD al final (ej. EURUSD)
-
-    # Verificar si el par tiene la moneda de cuenta al principio
-    if config.MONEDA_DE_CUENTA in simbolo:
-        valor_pip_lote = 1 # Para pares como USDJPY, USDCHF
-
-    lote = riesgo_dinero / (distancia_pips * valor_pip_lote)
-    lote = round(lote, 2)
-    
-    # Validar que el lote no exceda el máximo y esté dentro de los límites
-    if lote > config.MAX_LOTE:
-        lote = config.MAX_LOTE
-    
-    if lote < mt5.symbol_info(simbolo).volume_min:
-        logging.warning(f"El lote calculado ({lote}) es menor al mínimo. Usando lote mínimo: {mt5.symbol_info(simbolo).volume_min}")
-        lote = mt5.symbol_info(simbolo).volume_min
-    
-    logging.info(f"Lote calculado para {simbolo}: {lote}")
-    return lote
-
-def calcular_riesgo_dinamico(df, senal):
-    """
-    Calcula el Stop Loss y Take Profit basados en el ATR.
-    """
-    ultima_vela = df.iloc[-1]
-    if 'ATR' not in df.columns:
-        logging.warning("ATR no está en el DataFrame. Usando valores por defecto.")
-        atr_value = 0.00020 # Valor por defecto
-    else:
-        atr_value = ultima_vela['ATR']
-    
-    stop_loss = None
-    take_profit = None
-    
-    if senal == "compra":
-        stop_loss = ultima_vela['low'] - atr_value
-        take_profit = ultima_vela['close'] + (atr_value * 2) # Riesgo/Beneficio 1:2
-    elif senal == "venta":
-        stop_loss = ultima_vela['high'] + atr_value
-        take_profit = ultima_vela['close'] - (atr_value * 2)
-        
-    return stop_loss, take_profit
-
-def determinar_senales(df, estrategia):
-    """
-    Identifica las señales de compra o venta basadas en el nombre de la estrategia.
-    """
-    ultima_vela = df.iloc[-1]
-    
-    if len(df) < 2:
-        return None
-
-    # Lógica para la estrategia 'Cruce EMA + Vela Elefante'
-    if estrategia["nombre"] == "Cruce EMA + Vela Elefante":
-        if not all(k in df.columns for k in ['EMA_9', 'EMA_20', 'es_vela_elefante']):
-            return None
-
-        cruce_alcista = df['EMA_9'].iloc[-2] < df['EMA_20'].iloc[-2] and ultima_vela['EMA_9'] > ultima_vela['EMA_20']
-        cruce_bajista = df['EMA_9'].iloc[-2] > df['EMA_20'].iloc[-2] and ultima_vela['EMA_9'] < ultima_vela['EMA_20']
-        es_elefante = ultima_vela['es_vela_elefante']
-        
-        if cruce_alcista and es_elefante:
-            return "compra"
-        elif cruce_bajista and es_elefante:
-            return "venta"
-
-    # Lógica para la estrategia 'Rompimiento de la EMA 20'
-    elif estrategia["nombre"] == "Rompimiento de la EMA 20":
-        if not all(k in df.columns for k in ['EMA_20', 'es_vela_elefante']):
-            return None
-        
-        es_elefante = ultima_vela['es_vela_elefante']
-        
-        if es_elefante:
-            rompimiento_alcista = ultima_vela['close'] > ultima_vela['EMA_20'] and df['close'].iloc[-2] < df['EMA_20'].iloc[-2]
-            if rompimiento_alcista:
-                return "compra"
-
-            rompimiento_bajista = ultima_vela['close'] < ultima_vela['EMA_20'] and df['close'].iloc[-2] > df['EMA_20'].iloc[-2]
-            if rompimiento_bajista:
-                return "venta"
-    
-    # Lógica para la estrategia 'Reversión a la Media'
-    elif estrategia["nombre"] == "Reversión a la Media":
-        criterios = estrategia.get("criterios", {})
-        if 'EMA_20' not in df.columns:
-            return None
-        
-        precio_sobre_ema200 = True
-        precio_bajo_ema200 = True
-        if criterios.get("usar_filtro_tendencia_200_ema", False):
-            if 'EMA_200' not in df.columns or len(df) < 200:
-                print("No hay suficientes datos para la EMA de 200. Desactivando filtro de tendencia.")
-            else:
-                precio_sobre_ema200 = ultima_vela['close'] > ultima_vela['EMA_200']
-                precio_bajo_ema200 = ultima_vela['close'] < ultima_vela['EMA_200']
-        
-        cruce_alcista = df['close'].iloc[-2] < df['EMA_20'].iloc[-2] and ultima_vela['close'] > ultima_vela['EMA_20']
-        if cruce_alcista and precio_sobre_ema200:
-            return "compra"
-
-        cruce_bajista = df['close'].iloc[-2] > df['EMA_20'].iloc[-2] and ultima_vela['close'] < ultima_vela['EMA_20']
-        if cruce_bajista and precio_bajo_ema200:
-            return "venta"
-
-    return None
 
 def verificar_y_reconectar_mt5():
     """
