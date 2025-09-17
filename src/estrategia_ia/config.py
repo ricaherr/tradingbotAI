@@ -18,7 +18,7 @@ NUM_VELAS = 200
 MAX_OPERACIONES_SIMULTANEAS = 5
 
 # --- PARÁMETROS DE GESTIÓN DE RIESGO GLOBAL ---
-CAPITAL_INICIAL = 11000
+CAPITAL_INICIAL = 1000
 RIESGO_PORCENTAJE = 1.0  # Riesgo por operación como porcentaje del capital
 PERDIDA_MAXIMA_DIARIA = 0.02  # 2% del capital
 
@@ -47,20 +47,31 @@ MULTI_VELA_ELEFANTE = 2.0
 ESTRATEGIAS = [
     {
         "nombre": "Cruce EMA + Vela Elefante",
-        "activa": True,
-        "pares": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY"]
+        "modo": "inactiva", # La desactivamos por ahora
+        "pares": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY"],
+        "optimizable_params": {
+            "ema_corta": {"min": 5, "max": 20, "step": 1},
+            "ema_larga": {"min": 21, "max": 50, "step": 1},
+            "atr_period": {"min": 10, "max": 20, "step": 1},
+            "multi_vela_elefante": {"min": 1.5, "max": 3.0, "step": 0.1}
+        }
     },
     {
         "nombre": "Rompimiento de la EMA 20",
-        "activa": True,
-        "pares": ["EURUSD", "GBPUSD", "USDJPY"]
+        "modo": "inactiva",
+        "pares": ["EURUSD", "GBPUSD", "USDJPY"],
+        "optimizable_params": {
+            "ATR_PERIOD": {"min": 10, "max": 20, "step": 1}
+        }
     },
     {
         "nombre": "Reversión a la Media",
-        "activa": True,
-        "criterios": { # Criterios específicos que no están en config
-            "usar_filtro_tendencia_200_ema": True
-        },
-        "pares": ["EURUSD", "USDJPY", "AUDUSD", "NZDUSD"]
+        "modo": "backtest", # Activamos esta para la optimización
+        "usar_filtro_tendencia": True, # Usaremos el filtro de tendencia
+        "pares": ["EURUSD", "USDJPY", "AUDUSD", "NZDUSD"],
+        "optimizable_params": {
+            "ema_reversion": {"min": 10, "max": 50, "step": 2},
+            "ema_tendencia": {"min": 100, "max": 250, "step": 10}
+        }
     }
 ]

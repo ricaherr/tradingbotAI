@@ -1,0 +1,34 @@
+{
+    "nombre_estrategia": "Reversión a la Media",
+    "descripcion": "Resultados de la optimización de IA.",
+    "ultima_optimizacion": "2025-09-16T11:06:37.049518",
+    "mejor_resultado": {
+        "estado": "Viable",
+        "funcion_objetivo": "profit_neto",
+        "valor_objetivo": 799.681183952287,
+        "parametros_optimos": {
+            "ema_reversion": 12,
+            "ema_tendencia": 200
+        },
+        "metricas_rendimiento": {
+            "capital_inicial": 11000,
+            "capital_final": 11799.681183952287,
+            "profit_neto": 799.681183952287,
+            "operaciones_totales": 1641,
+            "operaciones_ganadoras": 819,
+            "operaciones_perdedoras": 822,
+            "tasa_acierto": 49.90859232175503,
+            "ganancia_bruta": 34518.24234126791,
+            "perdida_bruta": 33718.561157315635,
+            "profit_factor": 1.023716349586251,
+            "max_drawdown": 0.1706866680958001,
+            "historial_operaciones": [
+                {
+                    "ticket": 1,
+                    "simbolo": "EURUSD_BACKTEST",
+                    "tipo": "compra",
+                    "lote": 0.05,
+                    "precio_apertura": 1.1125,
+                    "sl": 1.0918415664658705,
+                    "tp": 1.1318168670682587,
+                    "fecha_apertura": 

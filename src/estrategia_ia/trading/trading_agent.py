@@ -5,17 +5,17 @@ import time
 import logging
 import csv
 from datetime import datetime
-from notificaciones import enviar_notificacion
-from gestor_riesgo_en_operacion import GestorRiesgoEnOperacion
-from gestion_riesgo import GestionRiesgo
-from registro_operaciones import registrar_operacion_abierta, monitorear_y_registrar_operaciones_cerradas, ordenes_en_curso
-from indicadores import calcular_indicadores, es_vela_elefante
-from strategies import determinar_senales
-from order_calculations import calcular_riesgo_dinamico, calcular_lote
+from estrategia_ia.utils.notificaciones import enviar_notificacion
+from estrategia_ia.risk_management.gestor_riesgo_en_operacion import GestorRiesgoEnOperacion
+from estrategia_ia.risk_management.gestion_riesgo import GestionRiesgo
+from estrategia_ia.utils.registro_operaciones import registrar_operacion_abierta, monitorear_y_registrar_operaciones_cerradas, ordenes_en_curso
+from estrategia_ia.core.indicadores import calcular_indicadores, es_vela_elefante
+from estrategia_ia.core.strategies import determinar_senales
+from estrategia_ia.core.order_calculations import calcular_riesgo_dinamico, calcular_lote
 import pytz
 
 # --- IMPORTAR CONFIGURACIÓN ---
-import config
+from estrategia_ia import config
 
 # --- CONFIGURACIÓN DEL REGISTRO ---
 logging.basicConfig(
@@ -43,21 +43,26 @@ def conectar_mt5():
     if not mt5.initialize():
         logging.error("Fallo al inicializar MetaTrader 5, error code: %s", mt5.last_error())
         return False
+    
+    # --- NUEVO: Pausa estratégica para estabilizar la conexión ---
+    print("Conexión con MT5 inicializada. Esperando 1 segundo para estabilizar...")
+    time.sleep(1)
+    
+    account_info = mt5.account_info()
+    if account_info:
+        logging.info(f"Conexión exitosa a la cuenta: {account_info.login} en el servidor {account_info.server} | Balance: {account_info.balance} {account_info.currency}")
+        print(f"[OK] Conexión exitosa a la cuenta: {account_info.login} ({account_info.server})")
     return True
 
 def desconectar_mt5():
     """Desconecta de MetaTrader 5."""
     mt5.shutdown()
-    print("✅ Desconexión de MetaTrader 5.")
+    print("[OK] Desconexión de MetaTrader 5.")
 
 def obtener_datos(simbolo, timeframe, num_velas):
     """Obtiene los datos históricos del par y el timeframe especificados."""
     timezone = pytz.timezone("Etc/UTC")
     utc_from = datetime.now(timezone) - pd.Timedelta(f"{num_velas + 10}min")
-    
-    if not mt5.initialize():
-        logging.error("initialize() falló al obtener datos: %s", mt5.last_error())
-        return None
         
     rates = mt5.copy_rates_from(simbolo, timeframe, utc_from, num_velas)
     if rates is None or len(rates) == 0:
@@ -78,7 +83,7 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
     """
     if mt5.positions_total() >= config.MAX_OPERACIONES_SIMULTANEAS:
         logging.warning(f"Máximo de operaciones simultáneas ({MAX_OPERACIONES_SIMULTANEAS}) alcanzado. No se puede abrir una nueva orden en {simbolo}.")
-        print(f"⚠️ Máximo de operaciones simultáneas alcanzado. Esperando...")
+        print(f"[AVISO] Máximo de operaciones simultáneas alcanzado. Esperando...")
         return
         
     symbol_info = mt5.symbol_info(simbolo)
@@ -98,7 +103,7 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
         beneficio_potencial_en_dinero = abs(take_profit - precio_actual) / symbol_info.point * mt5.symbol_info_tick(simbolo).bid * 100000
         spread_en_dinero = spread * mt5.symbol_info_tick(simbolo).bid * 100000
         if spread_en_dinero / beneficio_potencial_en_dinero > config.MAX_SPREAD_PORCENTAJE_BENEFICIO:
-            print(f"⚠️ Spread demasiado alto en {simbolo}. Operación cancelada.")
+            print(f"[AVISO] Spread demasiado alto en {simbolo}. Operación cancelada.")
             return
 
     distancia_stop_pips = abs(precio_actual - stop_loss) / symbol_info.point
@@ -115,7 +120,7 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
     lote_final = (riesgo_dinero / (distancia_stop_pips * valor_pip)) * factor_reduccion
     
     if lote_final < config.MIN_LOTE:
-        print(f"⚠️ Lote calculado ({lote_final:.4f}) es menor que el mínimo permitido ({config.MIN_LOTE:.2f}). Se ajustará al mínimo.")
+        print(f"[AVISO] Lote calculado ({lote_final:.4f}) es menor que el mínimo permitido ({config.MIN_LOTE:.2f}). Se ajustará al mínimo.")
         lote_final = config.MIN_LOTE
 
     lote_final = max(symbol_info.volume_min, min(lote_final, symbol_info.volume_max))
@@ -146,12 +151,12 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
     # NUEVO: Validar si la variable resultado es None
     if resultado is None:
         logging.error("Fallo al enviar la orden. Posiblemente se perdió la conexión con MetaTrader 5.")
-        print("❌ Fallo al enviar la orden. ¿Está el terminal MT5 abierto y conectado?")
+        print("[FALLO] Fallo al enviar la orden. ¿Está el terminal MT5 abierto y conectado?")
         return # Salir de la función para evitar el error
 
     if resultado.retcode == mt5.TRADE_RETCODE_DONE:
         logging.info(f"Orden ejecutada: {simbolo} {tipo_orden} | Lote: {lote_final:.2f} | SL: {stop_loss} | TP: {take_profit}")
-        print(f"🚀 Orden ejecutada: {simbolo} | Tipo: {'COMPRA' if tipo_orden == mt5.ORDER_TYPE_BUY else 'VENTA'} | Lote: {lote_final:.2f}")
+        print(f"[EJECUTADA] Orden ejecutada: {simbolo} | Tipo: {'COMPRA' if tipo_orden == mt5.ORDER_TYPE_BUY else 'VENTA'} | Lote: {lote_final:.2f}")
         
         # Registrar la orden para el seguimiento
         registrar_operacion_abierta(
@@ -166,13 +171,13 @@ def ejecutar_orden(simbolo, tipo_orden, stop_loss, take_profit, capital, riesgo_
         )
 
         # Enviar notificación
-        mensaje = f"✅ NUEVA OPERACIÓN\nPar: {simbolo}\nTipo: {'COMPRA' if tipo_orden == mt5.ORDER_TYPE_BUY else 'VENTA'}\nLote: {lote_final:.2f}\nEstrategia: {nombre_estrategia}"
+        mensaje = f"[OK] NUEVA OPERACIÓN\nPar: {simbolo}\nTipo: {'COMPRA' if tipo_orden == mt5.ORDER_TYPE_BUY else 'VENTA'}\nLote: {lote_final:.2f}\nEstrategia: {nombre_estrategia}"
         enviar_notificacion(mensaje)
     else:
         logging.error(f"Fallo al ejecutar la orden: {resultado.retcode} | {resultado.comment}")
-        print(f"❌ Fallo al ejecutar la orden. Código de error: {resultado.retcode}")
+        print(f"[FALLO] Fallo al ejecutar la orden. Código de error: {resultado.retcode}")
         # Enviar notificación de error
-        mensaje_error = f"❌ ERROR en OPERACIÓN\nPar: {simbolo}\nError: {resultado.retcode} - {resultado.comment}"
+        mensaje_error = f"[FALLO] ERROR en OPERACIÓN\nPar: {simbolo}\nError: {resultado.retcode} - {resultado.comment}"
         enviar_notificacion(mensaje_error)
 
 def verificar_y_reconectar_mt5():
@@ -182,14 +187,14 @@ def verificar_y_reconectar_mt5():
     """
     if mt5.account_info() is None:
         logging.warning("Conexión con MetaTrader 5 perdida. Intentando reconectar...")
-        print("⚠️ Conexión perdida. Intentando reconectar...")
+        print("[AVISO] Conexión perdida. Intentando reconectar...")
         if not mt5.initialize():
             logging.error("Fallo al re-inicializar la conexión con MetaTrader 5. Saliendo.")
-            print("❌ No se pudo reconectar. Verifique su terminal MT5. Cerrando el agente.")
+            print("[FALLO] No se pudo reconectar. Verifique su terminal MT5. Cerrando el agente.")
             return False
         else:
             logging.info("Conexión reestablecida con éxito.")
-            print("✅ Conexión reestablecida.")
+            print("[OK] Conexión reestablecida.")
     return True
 
 def main():
@@ -199,10 +204,11 @@ def main():
     if not conectar_mt5():
         return
     
-    estrategias_activas = [e for e in config.ESTRATEGIAS if e.get("activa", False)]
+    # Filtra solo las estrategias configuradas para operar en 'live'
+    estrategias_activas = [e for e in config.ESTRATEGIAS if e.get("modo") == "live"]
     if not estrategias_activas:
         logging.warning("No hay estrategias activas. Deteniendo el agente.")
-        print("🛑 No hay estrategias activas. Deteniendo el agente.")
+        print("[DETENIDO] No hay estrategias activas. Deteniendo el agente.")
         desconectar_mt5()
         return
 
@@ -237,7 +243,7 @@ def main():
             # --- FASE 1: Monitorear y gestionar operaciones abiertas ---
             if mt5.positions_total() > 0:
                 logging.info("Monitoreando operaciones abiertas para trailing stop...")
-                print("👀 Monitoreando operaciones abiertas...")
+                print("[MONITOR] Monitoreando operaciones abiertas...")
                 operaciones_abiertas = mt5.positions_get()
                 
                 for operacion in operaciones_abiertas:
@@ -280,11 +286,11 @@ def main():
                         resultado_mod = mt5.order_send(request)
                         if resultado_mod.retcode == mt5.TRADE_RETCODE_DONE:
                             logging.info(f"Stop loss actualizado para el ticket {operacion.ticket} de {operacion.sl} a {nuevo_stop}")
-                            print(f"✅ Stop Loss actualizado para el ticket {operacion.ticket}")
+                            print(f"[OK] Stop Loss actualizado para el ticket {operacion.ticket}")
                             info_operacion['stop_loss'] = nuevo_stop # Actualizar el diccionario local
                         else:
                             logging.error(f"Fallo al actualizar SL para el ticket {operacion.ticket}. Código: {resultado_mod.retcode}")
-                            print(f"❌ Fallo al actualizar SL para el ticket {operacion.ticket}. Código: {resultado_mod.retcode}")
+                            print(f"[FALLO] Fallo al actualizar SL para el ticket {operacion.ticket}. Código: {resultado_mod.retcode}")
 
             # NUEVO: Monitorear y registrar operaciones cerradas y sus resultados en el gestor de riesgo global
             monitorear_y_registrar_operaciones_cerradas(gestor_riesgo_global)
@@ -293,7 +299,7 @@ def main():
             # NUEVO: Verificar si la pérdida máxima diaria ha sido alcanzada
             if not gestor_riesgo_global.puede_operar():
                 logging.warning("Límite de pérdida diario alcanzado. Deteniendo la búsqueda de nuevas señales.")
-                print("🛑 ¡Límite de pérdida diario alcanzado! Deteniendo la búsqueda de señales por hoy.")
+                print("[DETENIDO] ¡Límite de pérdida diario alcanzado! Deteniendo la búsqueda de señales por hoy.")
                 time.sleep(60)
                 continue
 
@@ -305,7 +311,7 @@ def main():
                 # NUEVO: Verificar si la estrategia puede operar
                 if not gestor_riesgo_global.puede_operar(nombre_estrategia):
                     logging.warning(f"La estrategia '{nombre_estrategia}' no puede operar (límite alcanzado o cooldown).")
-                    print(f"⚠️ La estrategia '{nombre_estrategia}' no puede operar. Omisión.")
+                    print(f"[AVISO] La estrategia '{nombre_estrategia}' no puede operar. Omisión.")
                     continue
 
                 # Bucle para cada par de la estrategia
@@ -320,15 +326,16 @@ def main():
                     df = calcular_indicadores(datos, atr_period=config.ATR_PERIOD, multi_vela_elefante=config.MULTI_VELA_ELEFANTE)
 
                     # Determinar la señal
-                    senal = determinar_senales(df, estrategia)
+                    senal, razon = determinar_senales(df, estrategia)
 
                     if senal:
-                        logging.info(f"¡Señal de {senal.upper()} detectada en {par}!")
-                        print(f"✅ ¡Señal de {senal.upper()} en {par} con la estrategia '{nombre_estrategia}'!")
+                        logging.info(f"¡Señal de {senal.upper()} detectada en {par}! Razón: {razon}")
+                        print(f"[OK] ¡Señal de {senal.upper()} en {par} con la estrategia '{nombre_estrategia}'!")
                         
                         # Cálculo de riesgo y ejecución de la orden
                         stop_loss, take_profit = calcular_riesgo_dinamico(df, senal)
                         tipo_orden = mt5.ORDER_TYPE_BUY if senal == "compra" else mt5.ORDER_TYPE_SELL
+                        # Aquí la lógica de ejecución de orden real debería calcular el lote
                         
                         ejecutar_orden(
                             simbolo=par,
@@ -341,17 +348,17 @@ def main():
                             gestor_riesgo_global=gestor_riesgo_global # NUEVO: Pasamos la instancia
                         )
                     else:
-                        logging.info(f"No se detectó ninguna señal para {par} con esta estrategia.")
-                        print(f"❌ No se encontró señal para {par}.")
+                        logging.info(f"No se detectó señal para {par} con '{nombre_estrategia}'. Razón: {razon}")
+                        print(f"[FALLO] No se encontró señal para {par}.")
             
             time.sleep(60)
         except KeyboardInterrupt:
             logging.info("Agente detenido por el usuario.")
-            print("\n🛑 Agente detenido.")
+            print("\n[DETENIDO] Agente detenido.")
             break
         except Exception as e:
             logging.error(f"Ocurrió un error: {e}", exc_info=True)
-            print(f"🚨 ¡Ocurrió un error inesperado! Revisando en 60 segundos.")
+            print(f"[ERROR] ¡Ocurrió un error inesperado! Revisando en 60 segundos.")
             time.sleep(60)
             
     desconectar_mt5()

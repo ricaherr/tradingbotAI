@@ -1,7 +1,7 @@
 # order_calculations.py
 import logging
 import MetaTrader5 as mt5
-import config
+from estrategia_ia import config
 
 def calcular_riesgo_dinamico(df, senal):
     """
@@ -26,9 +26,11 @@ def calcular_riesgo_dinamico(df, senal):
         
     return stop_loss, take_profit
 
-def calcular_lote(capital, riesgo_porcentaje, stop_loss, simbolo, tipo_orden, info_simbolo):
-    """Calcula el lote dinámicamente basado en el riesgo por operación."""
-    precio_actual = mt5.symbol_info_tick(simbolo).ask if tipo_orden == mt5.ORDER_TYPE_BUY else mt5.symbol_info_tick(simbolo).bid
+def calcular_lote(capital, riesgo_porcentaje, stop_loss, precio_actual, info_simbolo):
+    """
+    Calcula el lote dinámicamente basado en el riesgo, SL y precio de entrada.
+    Ahora es independiente de MT5, recibiendo el precio_actual como argumento.
+    """
     
     if stop_loss is None or stop_loss == 0.0 or stop_loss == precio_actual:
         logging.warning(f"Stop Loss inválido. No se puede calcular el lote. Usando lote mínimo: {config.MIN_LOTE}")
@@ -42,16 +44,16 @@ def calcular_lote(capital, riesgo_porcentaje, stop_loss, simbolo, tipo_orden, in
         return config.MIN_LOTE
 
     riesgo_dinero = capital * (riesgo_porcentaje / 100)
-    
+
     # Usar el valor del tick del broker para un cálculo más preciso
     valor_tick = info_simbolo.trade_tick_value
     if valor_tick <= 0:
-        logging.error(f"Valor de tick inválido para {simbolo}. No se puede calcular el lote.")
+        logging.error(f"Valor de tick inválido. No se puede calcular el lote.")
         return None
 
     riesgo_por_lote = distancia_pips * valor_tick
     if riesgo_por_lote <= 0:
-        logging.error(f"Riesgo por lote es cero o negativo para {simbolo}. No se puede calcular el lote.")
+        logging.error(f"Riesgo por lote es cero o negativo. No se puede calcular el lote.")
         return None
 
     lote = riesgo_dinero / riesgo_por_lote
@@ -62,5 +64,5 @@ def calcular_lote(capital, riesgo_porcentaje, stop_loss, simbolo, tipo_orden, in
     
     lote_final = max(info_simbolo.volume_min, min(lote, info_simbolo.volume_max, config.MAX_LOTE))
     
-    logging.info(f"Lote calculado para {simbolo}: {lote_final}")
+    logging.info(f"Lote calculado: {lote_final}")
     return lote_final
