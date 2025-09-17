@@ -29,6 +29,7 @@ class IntelligentOptimizer:
                     self.strategy_config[param] = values["min"]
 
         self.results_history = []
+        self.convergence_history = [] # Para el gráfico de convergencia
         self.best_result = None
         self.best_config = None
         self.tested_configs = set()
@@ -92,6 +93,14 @@ class IntelligentOptimizer:
                 # con la misma configuración (que probablemente fallará de nuevo), o podríamos revertir.
                 # Revertir puede ser una opción segura.
                 self.strategy_config = copy.deepcopy(self.original_strategy_config)
+
+            # --- REGISTRO PARA GRÁFICO DE CONVERGENCIA ---
+            # Guardamos el mejor Sharpe Ratio encontrado HASTA AHORA para graficar la convergencia.
+            if self.best_result:
+                self.convergence_history.append(self.best_result.get('sharpe_ratio', 0))
+            else:
+                # Si no hay ningún resultado bueno todavía, registramos 0.
+                self.convergence_history.append(0)
 
         print("\n--- Optimización Finalizada ---")
         if self.best_result:
