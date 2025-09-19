@@ -12,16 +12,25 @@ from estrategia_ia.core.strategies import determinar_senales
 from estrategia_ia.core.order_calculations import calcular_riesgo_dinamico, calcular_lote
 from estrategia_ia.trading.broker_simulator import BrokerSimulator # Asegúrate de que broker_simulator.py esté creado
 
-def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False):
+def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False, backtest_period_years=None):
     """
     Ejecuta el backtesting para una estrategia y un conjunto de datos.
     Modificado para ser llamado desde el optimizador.
     """
     # 1. Cargar y preparar datos
     try:
-        # Cargar usando 'timestamp' y luego renombrar el índice a 'time' para consistencia
-        df_historico = pd.read_csv(file_path, index_col='timestamp', parse_dates=['timestamp'])
-        df_historico.index.name = 'time'
+        # Cargar usando 'time' como índice
+        df_historico = pd.read_csv(file_path, index_col='time', parse_dates=['time'])
+        
+        # Filtrar por período si se especifica
+        if backtest_period_years is not None and backtest_period_years > 0:
+            if not df_historico.empty:
+                end_date = df_historico.index.max()
+                start_date = end_date - pd.DateOffset(years=backtest_period_years)
+                df_historico = df_historico[df_historico.index >= start_date]
+                if verbose:
+                    print(f"Backtest limitado a los últimos {backtest_period_years} año(s) de datos.")
+
     except FileNotFoundError:
         if verbose:
             print(f"Error: No se encontró el archivo de datos en '{file_path}'")
@@ -32,17 +41,27 @@ def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False):
         return None
 
     # 2. Inicializar el simulador y las variables
-    simulador = BrokerSimulator(df_data=df_historico, capital_inicial=config.CAPITAL_INICIAL)
+    simulador = BrokerSimulator(df_data=df_historico, capital_inicial=config.CAPITAL_INICIAL_BACKTESTING)
     nombre_estrategia = estrategia_config["nombre"]
+
+    if verbose and not df_historico.empty:
+        print(f"BACKTEST: Datos cargados desde {df_historico.index.min().strftime('%Y-%m-%d %H:%M')} hasta {df_historico.index.max().strftime('%Y-%m-%d %H:%M')}. Total de {len(df_historico)} velas.")
 
     # 3. Bucle principal de simulación (vela por vela)
     if verbose:
         print(f"--- Iniciando Backtest para '{nombre_estrategia}' con params {estrategia_config.get('parametros')} ---")
     
+    candle_count = 0
+    total_candles = len(df_historico)
+    
     while True:
         vela_actual = simulador.tick()
         if vela_actual is None:
             break # Fin de los datos
+
+        candle_count += 1
+        if verbose and candle_count % 1000 == 0:
+            print(f"BACKTEST: Procesadas {candle_count}/{total_candles} velas ({candle_count/total_candles:.1%}). Balance: {simulador.balance:.2f}")
 
         # Determinar el número de velas necesarias para los indicadores
         # CORRECTO: Extraer los valores de los parámetros EMA desde la config principal
@@ -96,9 +115,24 @@ def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False):
                 sl=stop_loss, tp=take_profit, precio_actual=precio_entrada,
                 nombre_estrategia=nombre_estrategia
             )
+            if verbose:
+                print(f"BACKTEST: Orden {senal.upper()} ejecutada en {vela_actual.name}. Lote: {lote_calculado:.2f}, SL: {stop_loss:.5f}, TP: {take_profit:.5f}")
 
     # 4. Obtener y devolver el reporte final
     reporte = simulador.get_reporte(show_plot=show_plot, verbose=verbose)
+
+    # 5. Añadir información del período al reporte
+    if reporte is not None:
+        try:
+            start_date = df_historico.index[0]
+            end_date = df_historico.index[-1]
+            reporte['periodo_inicio'] = start_date.strftime('%Y-%m-%d')
+            reporte['periodo_fin'] = end_date.strftime('%Y-%m-%d')
+            reporte['periodo_dias'] = (end_date - start_date).days
+        except (IndexError, AttributeError) as e:
+            if verbose:
+                print(f"Advertencia: No se pudo añadir información del período al reporte: {e}")
+
     return reporte
 
 

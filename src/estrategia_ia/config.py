@@ -19,6 +19,7 @@ MAX_OPERACIONES_SIMULTANEAS = 5
 
 # --- PARÁMETROS DE GESTIÓN DE RIESGO GLOBAL ---
 CAPITAL_INICIAL = 1000
+CAPITAL_INICIAL_BACKTESTING = 10000
 RIESGO_PORCENTAJE = 1.0  # Riesgo por operación como porcentaje del capital
 PERDIDA_MAXIMA_DIARIA = 0.02  # 2% del capital
 
@@ -75,3 +76,13 @@ ESTRATEGIAS = [
         }
     }
 ]
+
+# --- PARÁMETROS DEL OPTIMIZADOR GENÉTICO ---
+OPTIMIZER_SETTINGS = {
+    "population_size": 50,    # Tamaño de la población por generación
+    "generations": 20,        # Número de generaciones a evolucionar
+    "mutation_rate": 0.1,      # Probabilidad de que un gen mute (10%)
+    "crossover_rate": 0.8,     # Probabilidad de que dos padres se crucen (80%)
+    "tournament_size": 3,      # Número de individuos a seleccionar para el torneo
+    "cpu_core_usage": 0.7      # Porcentaje de núcleos de CPU a utilizar (0.7 = 70%)
+}

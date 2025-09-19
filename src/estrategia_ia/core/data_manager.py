@@ -90,8 +90,8 @@ def _descargar_y_guardar(simbolo, timeframe, num_velas, output_path):
 
     print(f"Se descargaron {len(rates)} velas. Procesando y guardando...")
     df = pd.DataFrame(rates)
-    df['timestamp'] = pd.to_datetime(df['time'], unit='s')
-    df = df[['timestamp', 'open', 'high', 'low', 'close', 'tick_volume']]
+    df['time'] = pd.to_datetime(df['time'], unit='s')
+    df = df[['time', 'open', 'high', 'low', 'close', 'tick_volume']]
     df.rename(columns={'tick_volume': 'volume'}, inplace=True)
     
     try:
