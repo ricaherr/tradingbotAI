@@ -1,28 +1,34 @@
 # order_calculations.py
-import logging
 import MetaTrader5 as mt5
 from estrategia_ia import config
+from estrategia_ia.utils.logger import strategy_logger
 
 def calcular_riesgo_dinamico(df, senal):
     """
-    Calcula el Stop Loss y Take Profit basados en el ATR.
+    Calcula el Stop Loss y Take Profit basados en el ATR y una relación Riesgo/Beneficio.
     """
     ultima_vela = df.iloc[-1]
     if 'ATR' not in df.columns:
-        logging.warning("ATR no está en el DataFrame. Usando valores por defecto.")
+        strategy_logger.warning("ATR no está en el DataFrame. Usando valores por defecto.")
         atr_value = 0.00020 # Valor por defecto
     else:
         atr_value = ultima_vela['ATR']
-    
+
+    precio_entrada = ultima_vela['close']
     stop_loss = None
     take_profit = None
     
     if senal == "compra":
         stop_loss = ultima_vela['low'] - atr_value
-        take_profit = ultima_vela['close'] + (atr_value * 2) # Riesgo/Beneficio 1:2
+        distancia_sl = precio_entrada - stop_loss
+        take_profit = precio_entrada + (distancia_sl * config.RELACION_RIESGO_BENEFICIO)
     elif senal == "venta":
         stop_loss = ultima_vela['high'] + atr_value
-        take_profit = ultima_vela['close'] - (atr_value * 2)
+        distancia_sl = stop_loss - precio_entrada
+        take_profit = precio_entrada - (distancia_sl * config.RELACION_RIESGO_BENEFICIO)
+    else:
+        logging.warning(f"Señal no reconocida: {senal}")
+        return None, None
         
     return stop_loss, take_profit
 
@@ -49,12 +55,12 @@ def calcular_lote(capital, riesgo_porcentaje, stop_loss, precio_actual, info_sim
     valor_tick = info_simbolo.trade_tick_value
     if valor_tick <= 0:
         logging.error(f"Valor de tick inválido. No se puede calcular el lote.")
-        return None
+        return config.MIN_LOTE
 
     riesgo_por_lote = distancia_pips * valor_tick
     if riesgo_por_lote <= 0:
         logging.error(f"Riesgo por lote es cero o negativo. No se puede calcular el lote.")
-        return None
+        return config.MIN_LOTE
 
     lote = riesgo_dinero / riesgo_por_lote
     

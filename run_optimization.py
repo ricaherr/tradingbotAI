@@ -6,6 +6,12 @@ import argparse
 from datetime import datetime
 import MetaTrader5 as mt5
 import matplotlib.pyplot as plt
+import pandas as pd
+import warnings
+
+# Suprimir warnings de pandas que generan ruido durante optimización
+warnings.filterwarnings('ignore', category=pd.errors.SettingWithCopyWarning)
+warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
 
 # Importar los componentes de nuestro sistema de IA
 from src.estrategia_ia.optimization.optimizer import GeneticOptimizer
@@ -49,14 +55,18 @@ def run(test_mode=False, verbose_mode=False):
     """
     Punto de entrada principal para el sistema de optimización de estrategias.
     """
+    # --- 0. VALIDACIÓN DE CONFIGURACIÓN ---
+    if not config.validar_configuracion():
+        return
+    
     # --- 1. CONFIGURACIÓN DE LA OPTIMIZACIÓN ---
     NOMBRE_ESTRATEGIA_A_OPTIMIZAR = "Reversión a la Media"
     
     optimizer_settings = copy.deepcopy(config.OPTIMIZER_SETTINGS)
     if test_mode:
         print("\n" + "="*20 + " MODO DE PRUEBA ACTIVADO " + "="*20)
-        optimizer_settings["generations"] = 5
-        optimizer_settings["population_size"] = 10
+        optimizer_settings["generations"] = 3
+        optimizer_settings["population_size"] = 6
         optimizer_settings["backtest_period_years"] = 1
         print(f"Generaciones: {optimizer_settings['generations']}, Población: {optimizer_settings['population_size']}")
         print(f"Período de backtest: {optimizer_settings['backtest_period_years']} año(s)")
@@ -72,11 +82,18 @@ def run(test_mode=False, verbose_mode=False):
     print("Paso 1: Verificando y asegurando datos históricos...")
     print("=" * 50)
     
+    if test_mode:
+        num_velas = 5000
+        min_velas = 2000
+    else:
+        num_velas = 50000
+        min_velas = 10000
+        
     ruta_archivo_datos = asegurar_datos_historicos(
         simbolo="EURUSD",
         timeframe=mt5.TIMEFRAME_H1,
-        num_velas=50000,
-        min_velas=10000,
+        num_velas=num_velas,
+        min_velas=min_velas,
         max_age_days=7
     )
 
@@ -102,6 +119,7 @@ def run(test_mode=False, verbose_mode=False):
     optimizer = GeneticOptimizer(
         strategy_config=estrategia_para_optimizar, 
         data_file_path=ruta_archivo_datos,
+        test_mode=test_mode,
         **optimizer_settings
     )
 
