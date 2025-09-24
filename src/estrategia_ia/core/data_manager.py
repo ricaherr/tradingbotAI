@@ -4,6 +4,16 @@ import pandas as pd
 import time
 from datetime import datetime
 
+def timeframe_to_str(timeframe):
+    """Convierte un timeframe de MT5 a un string legible."""
+    mapa = {
+        mt5.TIMEFRAME_M1: "M1",
+        mt5.TIMEFRAME_M5: "M5",
+        mt5.TIMEFRAME_H1: "H1",
+        mt5.TIMEFRAME_D1: "D1",
+    }
+    return mapa.get(timeframe, "desconocido")
+
 def asegurar_datos_historicos(simbolo, timeframe, num_velas, min_velas, reintentos=3, max_age_days=7):
     """
     Asegura que un archivo de datos históricos exista, tenga suficientes registros y no sea demasiado antiguo.
@@ -101,13 +111,3 @@ def _descargar_y_guardar(simbolo, timeframe, num_velas, output_path):
     except Exception as e:
         print(f"Error al guardar el archivo CSV: {e}")
         return False
-
-def timeframe_to_str(timeframe):
-    """Convierte un timeframe de MT5 a un string legible."""
-    mapa = {
-        mt5.TIMEFRAME_M1: "M1",
-        mt5.TIMEFRAME_M5: "M5",
-        mt5.TIMEFRAME_H1: "H1",
-        mt5.TIMEFRAME_D1: "D1",
-    }
-    return mapa.get(timeframe, "desconocido")
