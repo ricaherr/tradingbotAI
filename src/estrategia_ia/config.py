@@ -133,13 +133,13 @@ def validar_configuracion():
         errores.append("cpu_core_usage debe estar entre 0 y 1")
     
     if errores:
-        print("\n❌ ERRORES DE CONFIGURACIÓN DETECTADOS:")
+        print("\n[ERROR] ERRORES DE CONFIGURACION DETECTADOS:")
         for error in errores:
             print(f"  • {error}")
         print("\nPor favor corrige estos errores antes de continuar.\n")
         return False
     
-    print("✅ Configuración validada correctamente")
+    print("[OK] Configuración validada correctamente")
     return True
 def validar_estrategia(estrategia_config):
     """Valida una configuración específica de estrategia."""
