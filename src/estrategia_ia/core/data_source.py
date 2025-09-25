@@ -40,17 +40,21 @@ class HistoricalDataSource:
         """Verifica si hay más velas para procesar."""
         return self.current_index < len(self.df_data) - 1
 
-    def get_next_candle_with_history(self):
+    def get_next_candle_with_history(self, window_size=500):
         """
         Avanza al siguiente paso de tiempo y devuelve la vela actual y el historial disponible.
+        Usa una ventana fija para evitar procesamiento exponencial.
         """
         if not self.has_next():
             return None, None
 
         self.current_index += 1
         
-        # La ventana de historial incluye la vela actual
-        historial_disponible = self.df_data.iloc[0 : self.current_index + 1]
+        # Usar ventana fija en lugar de toda la historia
+        start_idx = max(0, self.current_index + 1 - window_size)
+        end_idx = self.current_index + 1
+        
+        historial_disponible = self.df_data.iloc[start_idx:end_idx]
         vela_actual = self.df_data.iloc[self.current_index]
         
         return vela_actual, historial_disponible

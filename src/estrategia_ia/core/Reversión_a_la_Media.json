@@ -1,29 +1,29 @@
 {
     "nombre_estrategia": "Reversión a la Media",
     "descripcion": "Resultados de la optimización con Algoritmo Genético.",
-    "ultima_optimizacion": "2025-09-24T13:32:40.185635",
+    "ultima_optimizacion": "2025-09-24T16:17:18.972495",
     "mejor_resultado": {
         "estado": "No Viable",
         "parametros_optimos": {
-            "ema_reversion": 44,
-            "ema_tendencia": 230
+            "ema_reversion": 42,
+            "ema_tendencia": 220
         },
         "metricas_rendimiento": {
             "capital_inicial": 1000,
-            "capital_final": 934.847415332206,
-            "profit_neto": -65.15258466779403,
-            "operaciones_totales": 211,
-            "operaciones_ganadoras": 70,
-            "operaciones_perdedoras": 141,
-            "tasa_acierto": 33.175355450236964,
-            "ganancia_bruta": 479.3226371022348,
-            "perdida_bruta": 544.4752217700291,
-            "profit_factor": 0.8803387517691065,
-            "max_drawdown": 0.16586120410366817,
-            "sharpe_ratio": -30.029382804322747,
-            "sortino_ratio": -82.31825757886358,
-            "calmar_ratio": -6.029137467101531,
-            "win_loss_ratio": 1.7732537714206287,
+            "capital_final": 944.7304608803308,
+            "profit_neto": -55.26953911966916,
+            "operaciones_totales": 220,
+            "operaciones_ganadoras": 72,
+            "operaciones_perdedoras": 148,
+            "tasa_acierto": 32.72727272727273,
+            "ganancia_bruta": 513.706406610371,
+            "perdida_bruta": 568.9759457300408,
+            "profit_factor": 0.9028613783509694,
+            "max_drawdown": 0.16252892187071602,
+            "sharpe_ratio": -23.62003029520907,
+            "sortino_ratio": -66.56437763721483,
+            "calmar_ratio": -6.152751082637785,
+            "win_loss_ratio": 1.8558817221658814,
             "historial_operaciones": [
                 {
                     "ticket": 1,
@@ -141,6 +141,22 @@
                     "ticket": 8,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
+                    "lote": 0.09,
+                    "precio_apertura": 1.07888,
+                    "sl": 1.07888,
+                    "tp": 1.0771937017391349,
+                    "fecha_apertura": "2024-10-24 08:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0006841988405767125,
+                    "precio_cierre": 1.07888,
+                    "fecha_cierre": "2024-10-24 10:00:00",
+                    "resultado_dinero": 0.0,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 9,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
                     "lote": 0.03,
                     "precio_apertura": 1.08122,
                     "sl": 1.0791379232883478,
@@ -154,7 +170,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 9,
+                    "ticket": 10,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.08,
@@ -170,7 +186,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 10,
+                    "ticket": 11,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.08,
@@ -186,7 +202,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 11,
+                    "ticket": 12,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -202,7 +218,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 12,
+                    "ticket": 13,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -218,7 +234,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 13,
+                    "ticket": 14,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -234,7 +250,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 14,
+                    "ticket": 15,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -250,7 +266,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 15,
+                    "ticket": 16,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -266,7 +282,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 16,
+                    "ticket": 17,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.09,
@@ -282,7 +298,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 17,
+                    "ticket": 18,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -298,7 +314,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 18,
+                    "ticket": 19,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -314,7 +330,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 19,
+                    "ticket": 20,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -330,7 +346,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 20,
+                    "ticket": 21,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -346,7 +362,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 21,
+                    "ticket": 22,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -362,7 +378,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 22,
+                    "ticket": 23,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.02,
+                    "precio_apertura": 1.05618,
+                    "sl": 1.054168051493375,
+                    "tp": 1.0495722273282397,
+                    "fecha_apertura": "2024-11-14 18:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0023351817811734558,
+                    "precio_cierre": 1.054168051493375,
+                    "fecha_cierre": "2024-11-15 04:00:00",
+                    "resultado_dinero": 4.023897013250011,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 24,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -378,7 +410,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 23,
+                    "ticket": 25,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -394,7 +426,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 24,
+                    "ticket": 26,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -410,7 +442,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 25,
+                    "ticket": 27,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -426,7 +458,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 26,
+                    "ticket": 28,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -442,7 +474,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 27,
+                    "ticket": 29,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -458,7 +490,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 28,
+                    "ticket": 30,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -474,7 +506,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 29,
+                    "ticket": 31,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -490,7 +522,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 30,
+                    "ticket": 32,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.07,
@@ -506,23 +538,55 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 31,
+                    "ticket": 33,
                     "simbolo": "EURUSD",
-                    "tipo": "compra",
+                    "tipo": "venta",
                     "lote": 0.03,
-                    "precio_apertura": 1.05683,
-                    "sl": 1.0569051095625899,
-                    "tp": 1.0630099785340867,
-                    "fecha_apertura": "2024-11-29 19:00:00",
+                    "precio_apertura": 1.0532,
+                    "sl": 1.0549287795482678,
+                    "tp": 1.0471485146897312,
+                    "fecha_apertura": "2024-11-28 11:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.001816652356057873,
-                    "precio_cierre": 1.0569051095625899,
-                    "fecha_cierre": "2024-12-02 00:00:00",
-                    "resultado_dinero": 0.2253286877698102,
+                    "atr_apertura": 0.0015943235401792346,
+                    "precio_cierre": 1.0549287795482678,
+                    "fecha_cierre": "2024-11-28 16:00:00",
+                    "resultado_dinero": -5.1863386448036675,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 32,
+                    "ticket": 34,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.03,
+                    "precio_apertura": 1.05503,
+                    "sl": 1.05503,
+                    "tp": 1.059943413412748,
+                    "fecha_apertura": "2024-11-28 16:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0015722756084987977,
+                    "precio_cierre": 1.05503,
+                    "fecha_cierre": "2024-11-29 00:00:00",
+                    "resultado_dinero": 0.0,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 35,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.03,
+                    "precio_apertura": 1.05623,
+                    "sl": 1.0569051095625899,
+                    "tp": 1.0609051193501158,
+                    "fecha_apertura": "2024-11-29 17:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.001653412900077061,
+                    "precio_cierre": 1.0569051095625899,
+                    "fecha_cierre": "2024-12-02 00:00:00",
+                    "resultado_dinero": 2.025328687769612,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 36,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -538,7 +602,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 33,
+                    "ticket": 37,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -554,7 +618,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 34,
+                    "ticket": 38,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -570,7 +634,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 35,
+                    "ticket": 39,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -586,7 +650,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 36,
+                    "ticket": 40,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -602,7 +666,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 37,
+                    "ticket": 41,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -618,7 +682,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 38,
+                    "ticket": 42,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -634,7 +698,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 39,
+                    "ticket": 43,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -650,7 +714,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 40,
+                    "ticket": 44,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.06,
@@ -666,7 +730,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 41,
+                    "ticket": 45,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -682,7 +746,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 42,
+                    "ticket": 46,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -698,7 +762,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 43,
+                    "ticket": 47,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.05,
+                    "precio_apertura": 1.04872,
+                    "sl": 1.0502178613644308,
+                    "tp": 1.0453037014846391,
+                    "fecha_apertura": "2024-12-13 12:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.001407532343573956,
+                    "precio_cierre": 1.0502178613644308,
+                    "fecha_cierre": "2024-12-13 14:00:00",
+                    "resultado_dinero": -7.489306822153763,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 48,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -714,7 +794,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 44,
+                    "ticket": 49,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -730,7 +810,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 45,
+                    "ticket": 50,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -746,7 +826,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 46,
+                    "ticket": 51,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.06,
@@ -762,7 +842,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 47,
+                    "ticket": 52,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -778,7 +858,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 48,
+                    "ticket": 53,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.09,
@@ -794,7 +874,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 49,
+                    "ticket": 54,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -810,7 +890,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 50,
+                    "ticket": 55,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -826,7 +906,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 51,
+                    "ticket": 56,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -842,7 +922,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 52,
+                    "ticket": 57,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -858,7 +938,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 53,
+                    "ticket": 58,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -874,7 +954,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 54,
+                    "ticket": 59,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.08,
@@ -890,7 +970,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 55,
+                    "ticket": 60,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -906,7 +986,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 56,
+                    "ticket": 61,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -922,7 +1002,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 57,
+                    "ticket": 62,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -938,7 +1018,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 58,
+                    "ticket": 63,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -954,7 +1034,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 59,
+                    "ticket": 64,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.06,
@@ -970,7 +1050,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 60,
+                    "ticket": 65,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -986,7 +1066,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 61,
+                    "ticket": 66,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -1002,7 +1082,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 62,
+                    "ticket": 67,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -1018,7 +1098,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 63,
+                    "ticket": 68,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.06,
@@ -1034,7 +1114,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 64,
+                    "ticket": 69,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -1050,7 +1130,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 65,
+                    "ticket": 70,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -1066,7 +1146,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 66,
+                    "ticket": 71,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.04,
+                    "precio_apertura": 1.03552,
+                    "sl": 1.0358147952681458,
+                    "tp": 1.0396901620359014,
+                    "fecha_apertura": "2025-01-21 14:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0020067746906009525,
+                    "precio_cierre": 1.0396901620359014,
+                    "fecha_cierre": "2025-01-21 16:00:00",
+                    "resultado_dinero": 16.68064814360548,
+                    "razon_cierre": "Take Profit"
+                },
+                {
+                    "ticket": 72,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.06,
@@ -1082,7 +1178,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 67,
+                    "ticket": 73,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1098,7 +1194,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 68,
+                    "ticket": 74,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1114,7 +1210,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 69,
+                    "ticket": 75,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1130,7 +1226,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 70,
+                    "ticket": 76,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1146,7 +1242,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 71,
+                    "ticket": 77,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -1162,7 +1258,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 72,
+                    "ticket": 78,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1178,7 +1274,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 73,
+                    "ticket": 79,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -1194,7 +1290,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 74,
+                    "ticket": 80,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1210,7 +1306,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 75,
+                    "ticket": 81,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -1226,7 +1322,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 76,
+                    "ticket": 82,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -1242,10 +1338,10 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 77,
+                    "ticket": 83,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
-                    "lote": 0.03,
+                    "lote": 0.04,
                     "precio_apertura": 1.03059,
                     "sl": 1.03059,
                     "tp": 1.026188779400488,
@@ -1258,7 +1354,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 78,
+                    "ticket": 84,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1274,7 +1370,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 79,
+                    "ticket": 85,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -1290,7 +1386,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 80,
+                    "ticket": 86,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.07,
@@ -1306,7 +1402,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 81,
+                    "ticket": 87,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1322,23 +1418,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 82,
+                    "ticket": 88,
                     "simbolo": "EURUSD",
-                    "tipo": "venta",
-                    "lote": 0.05,
-                    "precio_apertura": 1.03745,
-                    "sl": 1.0392976020052016,
-                    "tp": 1.0346785969921974,
-                    "fecha_apertura": "2025-02-07 14:00:00",
+                    "tipo": "compra",
+                    "lote": 0.06,
+                    "precio_apertura": 1.0383499999999999,
+                    "sl": 1.0367481515324595,
+                    "tp": 1.0405027727013105,
+                    "fecha_apertura": "2025-02-07 13:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0010476020052017972,
-                    "precio_cierre": 1.0392976020052016,
+                    "atr_apertura": 0.0009918484675405488,
+                    "precio_cierre": 1.0367481515324595,
                     "fecha_cierre": "2025-02-07 15:00:00",
-                    "resultado_dinero": -9.238010026008103,
+                    "resultado_dinero": -9.611090805242473,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 83,
+                    "ticket": 89,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1354,7 +1450,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 84,
+                    "ticket": 90,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -1370,7 +1466,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 85,
+                    "ticket": 91,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -1386,7 +1482,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 86,
+                    "ticket": 92,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -1402,7 +1498,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 87,
+                    "ticket": 93,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1418,26 +1514,26 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 88,
+                    "ticket": 94,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.05,
-                    "precio_apertura": 1.04701,
-                    "sl": 1.04701,
-                    "tp": 1.0495559026915668,
-                    "fecha_apertura": "2025-02-21 13:00:00",
+                    "lote": 0.04,
+                    "precio_apertura": 1.04762,
+                    "sl": 1.0468491272664944,
+                    "tp": 1.051443433577221,
+                    "fecha_apertura": "2025-02-21 15:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0011739351277111228,
-                    "precio_cierre": 1.04701,
+                    "atr_apertura": 0.0012356223848141018,
+                    "precio_cierre": 1.0468491272664944,
                     "fecha_cierre": "2025-02-21 17:00:00",
-                    "resultado_dinero": 0.0,
+                    "resultado_dinero": -3.0834909340224925,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 89,
+                    "ticket": 95,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.03,
+                    "lote": 0.04,
                     "precio_apertura": 1.04755,
                     "sl": 1.048852658019296,
                     "tp": 1.0515802539555477,
@@ -1446,43 +1542,27 @@
                     "atr_apertura": 0.0013935026370318596,
                     "precio_cierre": 1.0515802539555477,
                     "fecha_cierre": "2025-02-24 03:00:00",
-                    "resultado_dinero": 12.090761866643039,
+                    "resultado_dinero": 16.12101582219072,
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 90,
-                    "simbolo": "EURUSD",
-                    "tipo": "compra",
-                    "lote": 0.03,
-                    "precio_apertura": 1.04814,
-                    "sl": 1.0453976208490938,
-                    "tp": 1.0525133311445614,
-                    "fecha_apertura": "2025-02-24 12:00:00",
-                    "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.001642220763040637,
-                    "precio_cierre": 1.0453976208490938,
-                    "fecha_cierre": "2025-02-24 16:00:00",
-                    "resultado_dinero": -8.227137452718747,
-                    "razon_cierre": "Stop Loss"
-                },
-                {
-                    "ticket": 91,
+                    "ticket": 96,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
-                    "precio_apertura": 1.04787,
-                    "sl": 1.0466469911715113,
-                    "tp": 1.051809499879379,
-                    "fecha_apertura": "2025-02-24 18:00:00",
+                    "precio_apertura": 1.04814,
+                    "sl": 1.0461880590153096,
+                    "tp": 1.0517345132427334,
+                    "fecha_apertura": "2025-02-24 20:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0014829999195857518,
-                    "precio_cierre": 1.0466469911715113,
-                    "fecha_cierre": "2025-02-24 22:00:00",
-                    "resultado_dinero": -4.892035313955212,
+                    "atr_apertura": 0.0014930088284888544,
+                    "precio_cierre": 1.0461880590153096,
+                    "fecha_cierre": "2025-02-25 01:00:00",
+                    "resultado_dinero": -7.807763938761703,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 92,
+                    "ticket": 97,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -1498,7 +1578,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 93,
+                    "ticket": 98,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1514,10 +1594,10 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 94,
+                    "ticket": 99,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.05,
+                    "lote": 0.06,
                     "precio_apertura": 1.04956,
                     "sl": 1.04956,
                     "tp": 1.052022144042955,
@@ -1530,7 +1610,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 95,
+                    "ticket": 100,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1546,23 +1626,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 96,
+                    "ticket": 101,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
-                    "lote": 0.05,
-                    "precio_apertura": 1.04084,
-                    "sl": 1.04084,
-                    "tp": 1.0377435236458905,
-                    "fecha_apertura": "2025-03-03 08:00:00",
+                    "lote": 0.04,
+                    "precio_apertura": 1.04094,
+                    "sl": 1.04094,
+                    "tp": 1.0367069252002654,
+                    "fecha_apertura": "2025-03-03 02:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0012543175694064812,
-                    "precio_cierre": 1.04084,
+                    "atr_apertura": 0.001772049866489633,
+                    "precio_cierre": 1.04094,
                     "fecha_cierre": "2025-03-03 11:00:00",
                     "resultado_dinero": 0.0,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 97,
+                    "ticket": 102,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1578,7 +1658,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 98,
+                    "ticket": 103,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1594,39 +1674,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 99,
+                    "ticket": 104,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.04,
-                    "precio_apertura": 1.08928,
-                    "sl": 1.0884864219619905,
-                    "tp": 1.0925184768510547,
-                    "fecha_apertura": "2025-03-13 03:00:00",
+                    "lote": 0.05,
+                    "precio_apertura": 1.08966,
+                    "sl": 1.0882786902736727,
+                    "tp": 1.0923253670570148,
+                    "fecha_apertura": "2025-03-13 05:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0013056512340363978,
-                    "precio_cierre": 1.0884864219619905,
-                    "fecha_cierre": "2025-03-13 07:00:00",
-                    "resultado_dinero": -3.1743121520380058,
+                    "atr_apertura": 0.0011735780380095753,
+                    "precio_cierre": 1.0882786902736727,
+                    "fecha_cierre": "2025-03-13 08:00:00",
+                    "resultado_dinero": -6.906548631636644,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 100,
-                    "simbolo": "EURUSD",
-                    "tipo": "compra",
-                    "lote": 0.04,
-                    "precio_apertura": 1.08944,
-                    "sl": 1.0874341982371831,
-                    "tp": 1.0928369645894906,
-                    "fecha_apertura": "2025-03-13 07:00:00",
-                    "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0011613097263271682,
-                    "precio_cierre": 1.0874341982371831,
-                    "fecha_cierre": "2025-03-13 09:00:00",
-                    "resultado_dinero": -8.023207051267356,
-                    "razon_cierre": "Stop Loss"
-                },
-                {
-                    "ticket": 101,
+                    "ticket": 105,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1642,7 +1706,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 102,
+                    "ticket": 106,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -1658,39 +1722,71 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 103,
-                    "simbolo": "EURUSD",
-                    "tipo": "venta",
-                    "lote": 0.05,
-                    "precio_apertura": 1.08394,
-                    "sl": 1.08394,
-                    "tp": 1.0809039100356181,
-                    "fecha_apertura": "2025-03-24 12:00:00",
-                    "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0014540599762542215,
-                    "precio_cierre": 1.0809039100356181,
-                    "fecha_cierre": "2025-03-24 16:00:00",
-                    "resultado_dinero": 15.180449821908804,
-                    "razon_cierre": "Take Profit"
-                },
-                {
-                    "ticket": 104,
+                    "ticket": 107,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
-                    "precio_apertura": 1.08149,
-                    "sl": 1.08149,
-                    "tp": 1.077403835058045,
-                    "fecha_apertura": "2025-03-25 16:00:00",
+                    "precio_apertura": 1.08383,
+                    "sl": 1.0853940599762542,
+                    "tp": 1.0800955015267113,
+                    "fecha_apertura": "2025-03-24 10:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0014241099613035266,
-                    "precio_cierre": 1.08149,
-                    "fecha_cierre": "2025-03-25 20:00:00",
+                    "atr_apertura": 0.001319665648859183,
+                    "precio_cierre": 1.0853940599762542,
+                    "fecha_cierre": "2025-03-24 13:00:00",
+                    "resultado_dinero": -6.256239905016336,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 108,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.03,
+                    "precio_apertura": 1.08326,
+                    "sl": 1.0811471570761837,
+                    "tp": 1.0784255590934197,
+                    "fecha_apertura": "2025-03-24 14:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0015329606043865264,
+                    "precio_cierre": 1.0811471570761837,
+                    "fecha_cierre": "2025-03-24 17:00:00",
+                    "resultado_dinero": 6.338528771448582,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 109,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.04,
+                    "precio_apertura": 1.08126,
+                    "sl": 1.08126,
+                    "tp": 1.0776136570503057,
+                    "fecha_apertura": "2025-03-25 17:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0015008952997963899,
+                    "precio_cierre": 1.08126,
+                    "fecha_cierre": "2025-03-25 19:00:00",
                     "resultado_dinero": 0.0,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 105,
+                    "ticket": 110,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.04,
+                    "precio_apertura": 1.07692,
+                    "sl": 1.077967168330179,
+                    "tp": 1.0730201520033407,
+                    "fecha_apertura": "2025-03-27 08:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0013798986644396236,
+                    "precio_cierre": 1.077967168330179,
+                    "fecha_cierre": "2025-03-27 13:00:00",
+                    "resultado_dinero": -4.188673320715708,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 111,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.06,
@@ -1706,7 +1802,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 106,
+                    "ticket": 112,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -1722,7 +1818,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 107,
+                    "ticket": 113,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -1738,7 +1834,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 108,
+                    "ticket": 114,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1754,7 +1850,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 109,
+                    "ticket": 115,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -1770,7 +1866,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 110,
+                    "ticket": 116,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -1786,7 +1882,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 111,
+                    "ticket": 117,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -1802,7 +1898,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 112,
+                    "ticket": 118,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -1818,7 +1914,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 113,
+                    "ticket": 119,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -1834,7 +1930,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 114,
+                    "ticket": 120,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1850,7 +1946,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 115,
+                    "ticket": 121,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1866,23 +1962,39 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 116,
+                    "ticket": 122,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.01,
-                    "precio_apertura": 1.09874,
-                    "sl": 1.1050929585950506,
-                    "tp": 1.109491387053255,
-                    "fecha_apertura": "2025-04-10 03:00:00",
+                    "lote": 0.03,
+                    "precio_apertura": 1.09867,
+                    "sl": 1.0996538485472445,
+                    "tp": 1.103625036185237,
+                    "fecha_apertura": "2025-04-10 08:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0036242580355033,
-                    "precio_cierre": 1.109491387053255,
-                    "fecha_cierre": "2025-04-10 15:00:00",
-                    "resultado_dinero": 10.751387053254957,
+                    "atr_apertura": 0.00258002412349118,
+                    "precio_cierre": 1.103625036185237,
+                    "fecha_cierre": "2025-04-10 11:00:00",
+                    "resultado_dinero": 14.865108555711213,
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 117,
+                    "ticket": 123,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.02,
+                    "precio_apertura": 1.13506,
+                    "sl": 1.1336024074329885,
+                    "tp": 1.1423749555702154,
+                    "fecha_apertura": "2025-04-15 05:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.0024333037134769133,
+                    "precio_cierre": 1.1336024074329885,
+                    "fecha_cierre": "2025-04-15 09:00:00",
+                    "resultado_dinero": -2.9151851340230017,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 124,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1898,7 +2010,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 118,
+                    "ticket": 125,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1914,7 +2026,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 119,
+                    "ticket": 126,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1930,7 +2042,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 120,
+                    "ticket": 127,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1946,7 +2058,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 121,
+                    "ticket": 128,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1962,7 +2074,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 122,
+                    "ticket": 129,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -1978,7 +2090,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 123,
+                    "ticket": 130,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -1994,7 +2106,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 124,
+                    "ticket": 131,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2010,7 +2122,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 125,
+                    "ticket": 132,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2026,7 +2138,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 126,
+                    "ticket": 133,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2042,7 +2154,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 127,
+                    "ticket": 134,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2058,7 +2170,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 128,
+                    "ticket": 135,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2074,7 +2186,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 129,
+                    "ticket": 136,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2090,7 +2202,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 130,
+                    "ticket": 137,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2106,7 +2218,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 131,
+                    "ticket": 138,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2122,7 +2234,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 132,
+                    "ticket": 139,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -2138,7 +2250,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 133,
+                    "ticket": 140,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2154,7 +2266,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 134,
+                    "ticket": 141,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2170,7 +2282,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 135,
+                    "ticket": 142,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2186,7 +2298,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 136,
+                    "ticket": 143,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -2202,7 +2314,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 137,
+                    "ticket": 144,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2218,7 +2330,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 138,
+                    "ticket": 145,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -2234,7 +2346,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 139,
+                    "ticket": 146,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2250,7 +2362,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 140,
+                    "ticket": 147,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2266,7 +2378,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 141,
+                    "ticket": 148,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2282,7 +2394,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 142,
+                    "ticket": 149,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2298,23 +2410,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 143,
+                    "ticket": 150,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
-                    "precio_apertura": 1.11944,
-                    "sl": 1.1209975530178833,
-                    "tp": 1.1153215428536636,
-                    "fecha_apertura": "2025-05-16 14:00:00",
+                    "precio_apertura": 1.11945,
+                    "sl": 1.1208056380975577,
+                    "tp": 1.1153339771720374,
+                    "fecha_apertura": "2025-05-16 12:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0013656380975576394,
-                    "precio_cierre": 1.1153215428536636,
+                    "atr_apertura": 0.0013140152186418095,
+                    "precio_cierre": 1.1153339771720374,
                     "fecha_cierre": "2025-05-16 17:00:00",
-                    "resultado_dinero": 16.47382858534563,
+                    "resultado_dinero": 16.46409131185056,
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 144,
+                    "ticket": 151,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2330,7 +2442,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 145,
+                    "ticket": 152,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2346,7 +2458,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 146,
+                    "ticket": 153,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2362,7 +2474,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 147,
+                    "ticket": 154,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -2378,7 +2490,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 148,
+                    "ticket": 155,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2394,7 +2506,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 149,
+                    "ticket": 156,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2410,7 +2522,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 150,
+                    "ticket": 157,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2426,7 +2538,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 151,
+                    "ticket": 158,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2442,7 +2554,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 152,
+                    "ticket": 159,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2458,7 +2570,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 153,
+                    "ticket": 160,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2474,7 +2586,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 154,
+                    "ticket": 161,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -2490,7 +2602,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 155,
+                    "ticket": 162,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2506,7 +2618,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 156,
+                    "ticket": 163,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2522,7 +2634,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 157,
+                    "ticket": 164,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2538,7 +2650,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 158,
+                    "ticket": 165,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -2554,7 +2666,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 159,
+                    "ticket": 166,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2570,7 +2682,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 160,
+                    "ticket": 167,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2586,7 +2698,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 161,
+                    "ticket": 168,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2602,7 +2714,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 162,
+                    "ticket": 169,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -2618,23 +2730,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 163,
-                    "simbolo": "EURUSD",
-                    "tipo": "compra",
-                    "lote": 0.03,
-                    "precio_apertura": 1.14991,
-                    "sl": 1.1517422155831007,
-                    "tp": 1.1541998527479613,
-                    "fecha_apertura": "2025-06-19 22:00:00",
-                    "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.001566568498640762,
-                    "precio_cierre": 1.1517422155831007,
-                    "fecha_cierre": "2025-06-20 09:00:00",
-                    "resultado_dinero": 5.496646749302281,
-                    "razon_cierre": "Stop Loss"
-                },
-                {
-                    "ticket": 164,
+                    "ticket": 170,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.04,
@@ -2650,7 +2746,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 165,
+                    "ticket": 171,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2666,7 +2762,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 166,
+                    "ticket": 172,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -2682,7 +2778,39 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 167,
+                    "ticket": 173,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.03,
+                    "precio_apertura": 1.16022,
+                    "sl": 1.1615872484774241,
+                    "tp": 1.1640743170610102,
+                    "fecha_apertura": "2025-06-25 16:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.001536211374006774,
+                    "precio_cierre": 1.1640743170610102,
+                    "fecha_cierre": "2025-06-25 20:00:00",
+                    "resultado_dinero": 11.56295118303041,
+                    "razon_cierre": "Take Profit"
+                },
+                {
+                    "ticket": 174,
+                    "simbolo": "EURUSD",
+                    "tipo": "compra",
+                    "lote": 0.03,
+                    "precio_apertura": 1.17838,
+                    "sl": 1.1796580388493807,
+                    "tp": 1.1835238394894438,
+                    "fecha_apertura": "2025-07-01 20:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.00176589299296243,
+                    "precio_cierre": 1.1796580388493807,
+                    "fecha_cierre": "2025-07-02 04:00:00",
+                    "resultado_dinero": 3.8341165481421413,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 175,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2698,7 +2826,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 168,
+                    "ticket": 176,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2714,7 +2842,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 169,
+                    "ticket": 177,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -2730,7 +2858,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 170,
+                    "ticket": 178,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2746,7 +2874,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 171,
+                    "ticket": 179,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -2762,7 +2890,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 172,
+                    "ticket": 180,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2778,7 +2906,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 173,
+                    "ticket": 181,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2794,7 +2922,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 174,
+                    "ticket": 182,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2810,23 +2938,39 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 175,
+                    "ticket": 183,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
-                    "lote": 0.04,
-                    "precio_apertura": 1.16887,
-                    "sl": 1.16887,
-                    "tp": 1.1656259575276653,
-                    "fecha_apertura": "2025-07-14 14:00:00",
+                    "lote": 0.03,
+                    "precio_apertura": 1.16846,
+                    "sl": 1.16846,
+                    "tp": 1.1641438782078892,
+                    "fecha_apertura": "2025-07-14 04:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0013226949815564805,
-                    "precio_cierre": 1.16887,
-                    "fecha_cierre": "2025-07-14 17:00:00",
+                    "atr_apertura": 0.00155741452807398,
+                    "precio_cierre": 1.16846,
+                    "fecha_cierre": "2025-07-14 06:00:00",
                     "resultado_dinero": 0.0,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 176,
+                    "ticket": 184,
+                    "simbolo": "EURUSD",
+                    "tipo": "venta",
+                    "lote": 0.05,
+                    "precio_apertura": 1.16858,
+                    "sl": 1.1695021575639246,
+                    "tp": 1.1656904965239763,
+                    "fecha_apertura": "2025-07-14 15:00:00",
+                    "estrategia": "Reversión a la Media",
+                    "atr_apertura": 0.001306335650682295,
+                    "precio_cierre": 1.1695021575639246,
+                    "fecha_cierre": "2025-07-14 18:00:00",
+                    "resultado_dinero": -4.610787819623319,
+                    "razon_cierre": "Stop Loss"
+                },
+                {
+                    "ticket": 185,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -2842,7 +2986,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 177,
+                    "ticket": 186,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.02,
@@ -2858,7 +3002,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 178,
+                    "ticket": 187,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.05,
@@ -2874,7 +3018,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 179,
+                    "ticket": 188,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -2890,7 +3034,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 180,
+                    "ticket": 189,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2906,7 +3050,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 181,
+                    "ticket": 190,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2922,7 +3066,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 182,
+                    "ticket": 191,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -2938,7 +3082,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 183,
+                    "ticket": 192,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -2954,23 +3098,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 184,
+                    "ticket": 193,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
-                    "lote": 0.03,
-                    "precio_apertura": 1.15462,
-                    "sl": 1.15462,
-                    "tp": 1.1498898641219273,
-                    "fecha_apertura": "2025-08-05 10:00:00",
+                    "lote": 0.04,
+                    "precio_apertura": 1.15481,
+                    "sl": 1.15481,
+                    "tp": 1.1514367717599618,
+                    "fecha_apertura": "2025-08-05 08:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.0015334239187152906,
-                    "precio_cierre": 1.15462,
-                    "fecha_cierre": "2025-08-05 12:00:00",
+                    "atr_apertura": 0.0012388188266919647,
+                    "precio_cierre": 1.15481,
+                    "fecha_cierre": "2025-08-05 15:00:00",
                     "resultado_dinero": 0.0,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 185,
+                    "ticket": 194,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -2986,7 +3130,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 186,
+                    "ticket": 195,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -3002,23 +3146,23 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 187,
+                    "ticket": 196,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
-                    "precio_apertura": 1.16449,
-                    "sl": 1.1645262768986744,
-                    "tp": 1.1680701679915586,
-                    "fecha_apertura": "2025-08-08 14:00:00",
+                    "precio_apertura": 1.16497,
+                    "sl": 1.16497,
+                    "tp": 1.1683110150692153,
+                    "fecha_apertura": "2025-08-08 16:00:00",
                     "estrategia": "Reversión a la Media",
-                    "atr_apertura": 0.001583445327705799,
-                    "precio_cierre": 1.1645262768986744,
-                    "fecha_cierre": "2025-08-08 22:00:00",
-                    "resultado_dinero": 0.14510759469743562,
+                    "atr_apertura": 0.0015640100461434504,
+                    "precio_cierre": 1.16497,
+                    "fecha_cierre": "2025-08-08 19:00:00",
+                    "resultado_dinero": 0.0,
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 188,
+                    "ticket": 197,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -3034,7 +3178,7 @@
                     "razon_cierre": "Take Profit"
                 },
                 {
-                    "ticket": 189,
+                    "ticket": 198,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -3050,7 +3194,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 190,
+                    "ticket": 199,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -3066,7 +3210,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 191,
+                    "ticket": 200,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3082,7 +3226,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 192,
+                    "ticket": 201,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -3098,7 +3242,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 193,
+                    "ticket": 202,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3114,7 +3258,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 194,
+                    "ticket": 203,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -3130,7 +3274,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 195,
+                    "ticket": 204,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -3146,7 +3290,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 196,
+                    "ticket": 205,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -3162,7 +3306,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 197,
+                    "ticket": 206,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -3178,7 +3322,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 198,
+                    "ticket": 207,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3194,7 +3338,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 199,
+                    "ticket": 208,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3210,7 +3354,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 200,
+                    "ticket": 209,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.05,
@@ -3226,7 +3370,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 201,
+                    "ticket": 210,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.01,
@@ -3242,7 +3386,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 202,
+                    "ticket": 211,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -3258,7 +3402,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 203,
+                    "ticket": 212,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3274,7 +3418,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 204,
+                    "ticket": 213,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.06,
@@ -3290,7 +3434,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 205,
+                    "ticket": 214,
                     "simbolo": "EURUSD",
                     "tipo": "venta",
                     "lote": 0.03,
@@ -3306,7 +3450,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 206,
+                    "ticket": 215,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -3322,7 +3466,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 207,
+                    "ticket": 216,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.02,
@@ -3338,7 +3482,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 208,
+                    "ticket": 217,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.01,
@@ -3354,7 +3498,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 209,
+                    "ticket": 218,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.04,
@@ -3370,7 +3514,7 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 210,
+                    "ticket": 219,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
                     "lote": 0.03,
@@ -3386,10 +3530,10 @@
                     "razon_cierre": "Stop Loss"
                 },
                 {
-                    "ticket": 211,
+                    "ticket": 220,
                     "simbolo": "EURUSD",
                     "tipo": "compra",
-                    "lote": 0.04,
+                    "lote": 0.05,
                     "precio_apertura": 1.1734499999999999,
                     "sl": 1.1735915870895406,
                     "tp": 1.1762815938300593,
@@ -3398,7 +3542,7 @@
                     "atr_apertura": 0.0010243958867065246,
                     "precio_cierre": 1.1762815938300593,
                     "fecha_cierre": "2025-09-15 13:00:00",
-                    "resultado_dinero": 11.326375320237503,
+                    "resultado_dinero": 14.157969150296879,
                     "razon_cierre": "Take Profit"
                 }
             ],
@@ -3423,149 +3567,156 @@
                 1062.6505220140489,
                 1079.5979171663917,
                 1082.400485940884,
-                1083.5335200439904,
-                1080.5099179359668,
-                1098.5032977744756,
-                1104.8146857705244,
-                1097.9129097558052,
-                1096.370049972563,
-                1090.4182667218663,
-                1090.6435954096362,
-                1093.1486805550314,
-                1085.160238942582,
-                1082.814669056964,
-                1083.2079370966287,
-                1080.6072088558751,
-                1074.3484311797145,
-                1069.150451006983,
-                1069.7347312357524,
-                1073.2955796614501,
-                1073.4887741723455,
-                1064.7386673594074,
-                1060.3820460899128,
-                1048.4891541920983,
-                1063.1280412977524,
-                1053.3045074515303,
-                1050.723477807396,
-                1044.5449554618963,
-                1047.132385113077,
-                1044.0966056391421,
-                1033.9424100515569,
-                1034.8187623452309,
-                1033.2684725663867,
-                1048.6873902553286,
-                1040.6311673943228,
-                1046.1145190533684,
-                1043.7036566304466,
-                1043.9904447989113,
-                1040.2922994659345,
-                1040.6177535737847,
-                1036.5535109399752,
-                1033.0319481730924,
-                1027.3859644579338,
-                1030.706180216237,
-                1026.0642654406433,
-                1020.3125121246355,
-                1021.5954458151438,
-                1011.0975105586405,
-                1022.9171684753678,
-                1019.3361340209118,
-                1014.5008951363278,
-                1007.8804214396234,
-                998.6424114136154,
-                989.7565026235785,
-                990.0676200212843,
-                983.1698433566753,
-                998.2454340510695,
-                1010.3361959177125,
-                1002.1090584649938,
-                997.2170231510386,
-                994.2724026405886,
-                994.4473047370271,
-                992.0326957716877,
-                988.8583836196497,
-                980.8351765683823,
-                977.155252586831,
-                971.3650120506044,
-                986.5454618725132,
-                989.4635443122352,
-                987.6318703815105,
-                983.7782130735434,
-                984.2812882511153,
-                976.3987305913076,
-                967.1714099195242,
-                982.8352895015412,
-                993.5866765547961,
-                1006.9258554683887,
-                1019.2705328645067,
-                1016.0011076297961,
-                1013.8385892295896,
-                1007.3456285235525,
-                1014.8292973204731,
-                1008.4983436453687,
-                1002.9156795398566,
-                998.3483421249786,
-                988.0135189230828,
-                984.7735964317042,
-                985.0305984724881,
-                975.6788920264789,
-                966.7158798006811,
-                956.6197388640358,
-                972.8149785155528,
-                988.037992080702,
-                976.497745994024,
-                992.9715745793695,
-                988.6660360464997,
-                992.2129413701605,
-                993.4090331615724,
-                993.9259295274941,
-                990.9229936634432,
-                993.9566857877953,
-                1008.9941281397525,
-                1002.8182482100716,
-                1000.1711955926278,
-                993.3259439798962,
-                989.7148772233943,
-                981.7552261751172,
-                971.4171771655217,
-                961.0160795530726,
-                966.5127263023749,
-                955.938727441762,
-                950.9271622342469,
-                957.2567031937368,
-                954.2091657887048,
-                950.4167982731055,
-                946.4936588020731,
-                949.8029856268997,
-                962.7400168079679,
-                967.9374938553987,
-                960.836372349263,
-                957.6736397285732,
-                953.5710983530763,
-                948.8777030424178,
-                939.1051670604255,
-                941.0878266931481,
-                945.150385825725,
-                945.2954934204224,
-                958.3594182066743,
-                950.1611294261972,
-                964.7960847617444,
-                958.5458407801825,
-                962.0082621806145,
-                957.3967510225824,
-                959.6056209097269,
-                956.1994159007504,
-                951.2789217429874,
-                957.2179364989834,
-                947.683013127976,
-                941.8924189881194,
-                937.015104464402,
-                933.3719936631783,
-                923.7711394641781,
-                921.5687916772094,
-                922.8352499632748,
-                923.5210400119685,
-                934.847415332206
+                1086.424382954134,
+                1087.5574170572404,
+                1084.5338149492168,
+                1102.5271947877256,
+                1108.8385827837744,
+                1101.9368067690552,
+                1100.393946985813,
+                1094.4421637351163,
+                1089.2558250903126,
+                1091.2811537780822,
+                1093.7862389234774,
+                1085.797797311028,
+                1083.45222742541,
+                1083.8454954650747,
+                1081.244767224321,
+                1074.9859895481604,
+                1069.788009375429,
+                1070.3722896041984,
+                1073.933138029896,
+                1074.1263325407915,
+                1066.6370257186377,
+                1057.8869189056995,
+                1053.530297636205,
+                1041.6374057383905,
+                1056.2762928440445,
+                1046.4527589978225,
+                1043.8717293536881,
+                1037.6932070081884,
+                1040.280636659369,
+                1037.2448571854343,
+                1027.090661597849,
+                1027.967013891523,
+                1026.4167241126788,
+                1041.8356418016208,
+                1033.779418940615,
+                1039.2627705996606,
+                1036.8519081767388,
+                1037.1386963452035,
+                1033.4405510122267,
+                1033.766005120077,
+                1050.4466532636825,
+                1046.382410629873,
+                1042.86084786299,
+                1037.2148641478316,
+                1040.5350799061348,
+                1035.893165130541,
+                1030.1414118145333,
+                1031.4243455050416,
+                1020.9264102485383,
+                1032.7460681652656,
+                1029.1650337108097,
+                1024.3297948262257,
+                1017.7093211295213,
+                1008.0982303242788,
+                999.2123215342419,
+                999.5234389319477,
+                992.6256622673387,
+                1007.701252961733,
+                1004.6177620277105,
+                1020.7387778499012,
+                1012.9310139111395,
+                1009.9863934006895,
+                1010.1612954971281,
+                1007.7466865317887,
+                1000.8401379001521,
+                997.1602139186008,
+                991.3699733823742,
+                985.1137334773579,
+                991.4522622488065,
+                987.2635889280908,
+                990.1816713678128,
+                988.3499974370881,
+                984.496340129121,
+                984.9994153066929,
+                977.1168576468853,
+                967.8895369751018,
+                983.5534165571188,
+                998.41852511283,
+                995.503339978807,
+                1008.8425188923997,
+                1021.1871962885176,
+                1017.9177710538071,
+                1015.7552526536006,
+                1009.2622919475634,
+                1016.745960744484,
+                1010.4150070693796,
+                1004.8323429638675,
+                1000.2650055489895,
+                989.9301823470937,
+                986.6902598557151,
+                986.9472618964991,
+                977.5955554504899,
+                968.6325432246921,
+                958.5364022880467,
+                974.7316419395637,
+                989.954655504713,
+                978.4144094180349,
+                994.8785007298854,
+                990.5729621970156,
+                994.1198675206764,
+                995.3159593120884,
+                995.83285567801,
+                992.8299198139591,
+                995.8636119383112,
+                1010.9010542902685,
+                1004.7251743605875,
+                1002.0781217431437,
+                995.2328701304122,
+                991.6218033739102,
+                983.6621523256331,
+                973.3241033160376,
+                962.9230057035885,
+                952.3490068429757,
+                947.3374416354606,
+                953.6669825949505,
+                965.2299337779809,
+                969.064050326123,
+                966.016512921091,
+                962.2241454054918,
+                958.3010059344593,
+                961.6103327592859,
+                974.5473639403541,
+                969.9365761207308,
+                975.1340531681616,
+                968.0329316620259,
+                964.8701990413362,
+                960.7676576658392,
+                956.0742623551807,
+                946.3017263731884,
+                948.2843860059111,
+                952.346945138488,
+                965.4108699247398,
+                957.2125811442628,
+                971.84753647981,
+                965.5972924982481,
+                969.05971389868,
+                964.448202740648,
+                966.6570726277924,
+                963.250867618816,
+                958.330373461053,
+                964.2693882170489,
+                954.7344648460415,
+                948.943870706185,
+                944.0665561824676,
+                940.4234453812438,
+                930.8225911822435,
+                928.6202433952749,
+                929.8867016813402,
+                930.5724917300339,
+                944.7304608803308
             ],
             "periodo_inicio": "2024-09-17",
             "periodo_fin": "2025-09-17",
@@ -3574,8 +3725,8 @@
         }
     },
     "historial_optimizaciones": [
-        -41.680052963253026,
-        -30.029382804322747,
-        -30.029382804322747
+        -28.66075343256115,
+        -23.62003029520907,
+        -23.62003029520907
     ]
 }

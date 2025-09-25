@@ -1,4 +1,5 @@
 # order_calculations.py
+import logging
 import MetaTrader5 as mt5
 from estrategia_ia import config
 from estrategia_ia.utils.logger import strategy_logger

@@ -118,8 +118,14 @@ class TradingEngine:
 
     def _calculate_indicators(self, df_ventana):
         """
-        Wrapper para el cálculo de indicadores.
+        Wrapper para el cálculo de indicadores con caché para evitar recálculos.
         """
+        # Verificar si ya tenemos indicadores calculados para esta ventana
+        if hasattr(self, '_last_indicators_size') and len(df_ventana) == self._last_indicators_size:
+            # Si el tamaño es el mismo, solo necesitamos actualizar la última fila
+            if hasattr(self, '_cached_indicators') and not self._cached_indicators.empty:
+                return self._cached_indicators
+        
         optimizable_params = self.strategy_config.get("optimizable_params", {})
         ema_keys = [k for k in optimizable_params.keys() if 'ema' in k]
         ema_periods = [self.strategy_config.get(k) for k in ema_keys if self.strategy_config.get(k) is not None]
@@ -131,9 +137,16 @@ class TradingEngine:
         if len(df_ventana) < num_velas_requeridas:
             return pd.DataFrame()
 
-        return calcular_indicadores(
+        # Calcular indicadores
+        indicators = calcular_indicadores(
             df_ventana,
             ema_periods=ema_periods,
             atr_period=self.strategy_config.get("atr_period", 14),
             multi_vela_elefante=self.strategy_config.get("multi_vela_elefante", 2.0)
         )
+        
+        # Cachear para próxima iteración
+        self._cached_indicators = indicators
+        self._last_indicators_size = len(df_ventana)
+        
+        return indicators

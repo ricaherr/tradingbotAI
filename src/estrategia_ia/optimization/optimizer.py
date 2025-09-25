@@ -3,6 +3,7 @@ import os
 import copy
 import random
 import signal
+import logging
 from multiprocessing import Pool, cpu_count
 
 # Add src directory to path to allow imports to work
@@ -38,6 +39,7 @@ def run_fitness_calculation(args):
         from estrategia_ia.backtesting.backtester import run_backtest
         from estrategia_ia.optimization.evaluator import Evaluator
         import copy
+        import logging
 
         # Lógica de _run_backtest
         strategy_config = copy.deepcopy(strategy_config_base)
@@ -269,6 +271,13 @@ class GeneticOptimizer:
     
     def _evaluate_population(self, valid_population):
         """Evalúa una población usando procesamiento paralelo con fallback secuencial."""
+        
+        # En modo test o poblaciones pequeñas, usar evaluación secuencial directamente
+        if self.test_mode or self.population_size <= 10:
+            print(f"    Evaluando {len(valid_population)} individuos (secuencial)...")
+            return [self._calculate_fitness(ind) for ind in valid_population]
+        
+        # Para poblaciones grandes, intentar multiprocessing
         args_for_pool = [
             (ind, self.strategy_config_base, self.data_file_path, self.backtest_period_years, self.test_mode) for
             ind in valid_population
@@ -277,6 +286,8 @@ class GeneticOptimizer:
         try:
             total_cores = cpu_count()
             num_cores = max(1, int(total_cores * self.cpu_core_usage))
+            
+            print(f"    Evaluando {len(valid_population)} individuos (paralelo con {num_cores} cores)...")
             
             with Pool(processes=num_cores, initializer=worker_init) as pool:
                 result = pool.map_async(run_fitness_calculation, args_for_pool)
@@ -326,8 +337,12 @@ class GeneticOptimizer:
 
     def _selection(self, population, fitness_scores):
         # Tournament Selection
-        if not population or not fitness_scores: return random.choice(population)
-        tournament = random.sample(list(zip(population, fitness_scores)), self.tournament_size)
+        if not population or not fitness_scores: 
+            return random.choice(population) if population else None
+        
+        # Ajustar tournament_size si es mayor que la población
+        actual_tournament_size = min(self.tournament_size, len(population))
+        tournament = random.sample(list(zip(population, fitness_scores)), actual_tournament_size)
         winner = max(tournament, key=lambda x: x[1])
         return winner[0]
 
