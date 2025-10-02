@@ -113,7 +113,8 @@ class TradingEngine:
                 sl=stop_loss,
                 tp=take_profit,
                 nombre_estrategia=self.nombre_estrategia,
-                atr_apertura=df_indicadores.iloc[-1].get('ATR')
+                atr_apertura=df_indicadores.iloc[-1].get('ATR'),
+                strategy_config=self.strategy_config
             )
 
     def _calculate_indicators(self, df_ventana):
