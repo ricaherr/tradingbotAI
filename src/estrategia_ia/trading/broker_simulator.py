@@ -90,15 +90,20 @@ class BrokerSimulator:
 
         self.posiciones_abiertas = [p for p in self.posiciones_abiertas if p not in posiciones_a_cerrar]
 
-    def execute_order(self, simbolo, tipo_orden_str, sl, tp, nombre_estrategia, atr_apertura):
+    def execute_order(self, simbolo, tipo_orden_str, sl, tp, nombre_estrategia, atr_apertura, strategy_config=None):
         """Simula la ejecución de una orden, calculando el lote internamente."""
         precio_entrada = self.get_current_price(simbolo, tipo_orden_str)
+        
+        # Usar parámetros dinámicos de riesgo si están disponibles
+        riesgo_dinamico = self.riesgo_porcentaje
+        if strategy_config and 'riesgo_porcentaje' in strategy_config:
+            riesgo_dinamico = strategy_config['riesgo_porcentaje']
         
         # Simular la información del símbolo que MT5 proporcionaría
         info_simulada = SimpleNamespace(point=0.00001, trade_tick_value=1.0, volume_step=0.01, volume_min=0.01, volume_max=100.0)
         
         lote_calculado = calcular_lote(
-            self.balance, self.riesgo_porcentaje, sl, precio_entrada, info_simulada
+            self.balance, riesgo_dinamico, sl, precio_entrada, info_simulada
         )
         if lote_calculado < info_simulada.volume_min:
             # print(f"SIM: Lote calculado ({lote_calculado}) es menor al mínimo. Orden no ejecutada.")

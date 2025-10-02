@@ -43,38 +43,63 @@ REDUCIR_POSICION_ACTIVO = True
 PERDIDAS_CONSECUTIVAS_REDUCCION = 3  # Reducir lote después de N pérdidas
 FACTOR_REDUCCION_LOTE = 0.75         # Reducir el lote al 75%
 
-# --- PARÁMETROS DE ESTRATEGIAS ---
+# --- PARÁMETROS BASE DE ESTRATEGIAS ---
 ATR_PERIOD = 14
 MULTI_VELA_ELEFANTE = 2.0
+EMA_PERIOD_DEFAULT = 20
+DESVIACION_THRESHOLD_DEFAULT = 1.0
 
 ESTRATEGIAS = [
     {
         "nombre": "Cruce EMA + Vela Elefante",
-        "modo": "inactiva", # La desactivamos por ahora
+        "modo": "backtest", # Activada para pruebas multi-timeframe
         "pares": ["EURUSD", "GBPUSD", "USDJPY", "EURJPY"],
         "optimizable_params": {
-            "ema_corta": {"min": 5, "max": 20, "step": 1},
-            "ema_larga": {"min": 21, "max": 50, "step": 1},
-            "atr_period": {"min": 10, "max": 20, "step": 1},
-            "multi_vela_elefante": {"min": 1.5, "max": 3.0, "step": 0.1}
+            "timeframe": {"min": 0, "max": 5, "step": 1}, # 0=M1, 1=M5, 2=M15, 3=M30, 4=H1, 5=H4
+            "ema_corta": {"min": 5, "max": 25, "step": 2},
+            "ema_larga": {"min": 26, "max": 60, "step": 3},
+            "atr_period": {"min": 8, "max": 25, "step": 2},
+            "multi_vela_elefante": {"min": 1.2, "max": 4.0, "step": 0.2},
+            "riesgo_porcentaje": {"min": 0.5, "max": 3.0, "step": 0.25},
+            "relacion_riesgo_beneficio": {"min": 1.0, "max": 3.0, "step": 0.25}
         }
     },
     {
         "nombre": "Rompimiento de la EMA 20",
-        "modo": "inactiva",
+        "modo": "backtest", # Cambiar a backtest para pruebas
         "pares": ["EURUSD", "GBPUSD", "USDJPY"],
+        "ema_period": 23, # Optimizado
+        "ATR_PERIOD": 8, # Optimizado
+        "riesgo_porcentaje": 2.0, # Optimizado
+        "relacion_riesgo_beneficio": 2.0, # Optimizado
+        "confirmacion_velas": 3, # Optimizado
         "optimizable_params": {
-            "ATR_PERIOD": {"min": 10, "max": 20, "step": 1}
+            "timeframe": {"min": 0, "max": 5, "step": 1}, # 0=M1, 1=M5, 2=M15, 3=M30, 4=H1, 5=H4
+            "ema_period": {"min": 15, "max": 30, "step": 2},
+            "ATR_PERIOD": {"min": 8, "max": 25, "step": 2},
+            "riesgo_porcentaje": {"min": 0.5, "max": 3.0, "step": 0.25},
+            "relacion_riesgo_beneficio": {"min": 1.0, "max": 3.0, "step": 0.25},
+            "confirmacion_velas": {"min": 1, "max": 3, "step": 1}
         }
     },
     {
         "nombre": "Reversión a la Media",
-        "modo": "backtest", # Activamos esta para la optimización
-        "usar_filtro_tendencia": True, # Usaremos el filtro de tendencia
+        "modo": "backtest", # Activada para pruebas multi-timeframe
         "pares": ["EURUSD", "USDJPY", "AUDUSD", "NZDUSD"],
+        "ema_reversion": 20,  # Parámetro base
+        "desviacion_threshold": 1.5,  # Parámetro base
+        "usar_filtro_tendencia": 1,  # Parámetro base
+        "riesgo_porcentaje": 2.0,  # Parámetro base
+        "relacion_riesgo_beneficio": 2.0,  # Parámetro base
+        "min_distancia_ema": 0.002,  # Parámetro base
         "optimizable_params": {
-            "ema_reversion": {"min": 10, "max": 50, "step": 2},
-            "ema_tendencia": {"min": 100, "max": 250, "step": 10}
+            "timeframe": {"min": 0, "max": 5, "step": 1}, # 0=M1, 1=M5, 2=M15, 3=M30, 4=H1, 5=H4
+            "ema_reversion": {"min": 14, "max": 30, "step": 2},  # Rango más enfocado
+            "desviacion_threshold": {"min": 1.0, "max": 2.0, "step": 0.1},  # Rango más preciso
+            "usar_filtro_tendencia": {"min": 0, "max": 1, "step": 1}, # 0=False, 1=True
+            "riesgo_porcentaje": {"min": 1.0, "max": 2.5, "step": 0.25},  # Riesgo más conservador
+            "relacion_riesgo_beneficio": {"min": 1.5, "max": 2.5, "step": 0.25},  # RR más realista
+            "min_distancia_ema": {"min": 0.001, "max": 0.003, "step": 0.0002}  # Distancia más realista
         }
     }
 ]
@@ -87,6 +112,44 @@ OPTIMIZER_SETTINGS = {
     "crossover_rate": 0.8,     # Probabilidad de que dos padres se crucen (80%)
     "tournament_size": 3,      # Número de individuos a seleccionar para el torneo
     "cpu_core_usage": 0.7      # Porcentaje de núcleos de CPU a utilizar (0.7 = 70%)
+}
+
+# --- CONFIGURACIÓN DE TIMEFRAMES ---
+TIMEFRAMES_CONFIG = {
+    "M1": {"mt5_code": 1, "name": "1 Minuto", "velas_needed": 2000},
+    "M5": {"mt5_code": 5, "name": "5 Minutos", "velas_needed": 1500},
+    "M15": {"mt5_code": 15, "name": "15 Minutos", "velas_needed": 1200},
+    "M30": {"mt5_code": 30, "name": "30 Minutos", "velas_needed": 1000},
+    "H1": {"mt5_code": 16385, "name": "1 Hora", "velas_needed": 800},
+    "H4": {"mt5_code": 16388, "name": "4 Horas", "velas_needed": 500}
+}
+
+# --- CONFIGURACIÓN DE OPTIMIZACIÓN MULTI-ESTRATEGIA ---
+MULTI_STRATEGY_SETTINGS = {
+    "optimization_mode": "sequential",  # "sequential", "parallel", "portfolio"
+    "strategy_selection": "active_only", # "active_only", "all", "custom"
+    "portfolio_weights": "equal",       # "equal", "optimized", "manual"
+    "comparison_metric": "sharpe_ratio", # "sharpe_ratio", "profit_neto", "calmar_ratio"
+    "enable_strategy_ranking": True,     # Generar ranking de estrategias
+    "save_individual_results": True,     # Guardar resultados por estrategia
+    "cross_validation": False,           # Validación cruzada (más lento)
+    "test_all_timeframes": True,         # Probar todos los timeframes
+    "timeframes_to_test": ["M1", "M5", "M15", "M30", "H1"]
+}
+
+# --- CONFIGURACIÓN DE OPTIMIZACIÓN POR TIMEFRAMES ---
+TIMEFRAME_OPTIMIZATION = {
+    "mode": "full",  # "single", "screening", "hybrid", "full"
+    "screening_generations": 4,    # Generaciones para screening inicial
+    "full_generations": 20,        # Generaciones para análisis completo
+    "hybrid_deep_generations": 15,  # Generaciones para fase profunda en modo hybrid
+    "min_profitability_threshold": 0.5,  # ROI mínimo % para pasar screening
+    "top_timeframes_to_optimize": 3,      # Cuántos mejores timeframes optimizar completamente
+    "enable_timeframe_comparison": True,   # Generar reporte comparativo
+    "statistical_confidence": 0.95,       # Nivel de confianza estadística
+    "save_detailed_results": True,        # Guardar resultados detallados por timeframe
+    "backtest_period_days": 365,          # Período de backtest en días (default: 1 año)
+    "default_timeframes": ["M1", "M5", "M15", "M30", "H1"]  # Timeframes por defecto
 }
 
 # --- VALIDACIÓN DE CONFIGURACIÓN ---
@@ -132,6 +195,19 @@ def validar_configuracion():
     if not (0 < OPTIMIZER_SETTINGS["cpu_core_usage"] <= 1):
         errores.append("cpu_core_usage debe estar entre 0 y 1")
     
+    # Validar configuración multi-estrategia
+    valid_modes = ["sequential", "parallel", "portfolio"]
+    if MULTI_STRATEGY_SETTINGS["optimization_mode"] not in valid_modes:
+        errores.append(f"optimization_mode debe ser uno de: {valid_modes}")
+    
+    valid_selections = ["active_only", "all", "custom"]
+    if MULTI_STRATEGY_SETTINGS["strategy_selection"] not in valid_selections:
+        errores.append(f"strategy_selection debe ser uno de: {valid_selections}")
+    
+    valid_weights = ["equal", "optimized", "manual"]
+    if MULTI_STRATEGY_SETTINGS["portfolio_weights"] not in valid_weights:
+        errores.append(f"portfolio_weights debe ser uno de: {valid_weights}")
+    
     if errores:
         print("\n[ERROR] ERRORES DE CONFIGURACION DETECTADOS:")
         for error in errores:
@@ -140,6 +216,7 @@ def validar_configuracion():
         return False
     
     print("[OK] Configuración validada correctamente")
+    print(f"[INFO] Modo de optimización: {MULTI_STRATEGY_SETTINGS['optimization_mode']}")
     return True
 def validar_estrategia(estrategia_config):
     """Valida una configuración específica de estrategia."""
