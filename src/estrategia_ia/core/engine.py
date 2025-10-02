@@ -3,7 +3,7 @@ import pandas as pd
 from estrategia_ia.utils.logger import engine_logger
 
 from estrategia_ia.core.indicadores import calcular_indicadores
-from estrategia_ia.core.strategies import determinar_senales
+from estrategia_ia.core.strategies import determinar_senales, validar_senal_con_riesgo
 from estrategia_ia.core.order_calculations import calcular_riesgo_dinamico, calcular_lote
 from estrategia_ia.risk_management.gestor_riesgo_en_operacion import GestorRiesgoEnOperacion
 
@@ -17,6 +17,12 @@ class TradingEngine:
         self.data_source = data_source
         self.verbose = verbose
         self.nombre_estrategia = self.strategy_config["nombre"]
+        
+        # Determinar timeframe dinámico
+        self.timeframe = self._get_timeframe_from_config()
+        
+        # RiskCalculator del risk_manager_config
+        self.risk_calculator = risk_manager_config.get("risk_calculator")
 
         # Inicializar gestor de riesgo en la operación (Trailing Stop, Break Even)
         self.gestor_riesgo_op = GestorRiesgoEnOperacion(
@@ -99,14 +105,26 @@ class TradingEngine:
         if df_indicadores.empty:
             return
 
-        senal, razon = determinar_senales(df_indicadores, self.strategy_config)
+        senal, signal_data = determinar_senales(df_indicadores, self.strategy_config, self.timeframe)
 
-        if senal:
+        if senal and isinstance(signal_data, dict):
+            # Validar señal con RiskCalculator
+            es_valida, razon_validacion = validar_senal_con_riesgo(signal_data)
             
-
-            stop_loss, take_profit = calcular_riesgo_dinamico(df_indicadores, senal)
+            if not es_valida:
+                if self.verbose:
+                    print(f"Señal rechazada: {razon_validacion}")
+                return
             
-            # Aquí, el broker se encargará de calcular el lote y ejecutar la orden
+            # Usar parámetros calculados dinámicamente
+            stop_loss = signal_data.get('stop_loss')
+            take_profit = signal_data.get('take_profit')
+            
+            if stop_loss is None or take_profit is None:
+                # Fallback al método original
+                stop_loss, take_profit = calcular_riesgo_dinamico(df_indicadores, senal)
+            
+            # Ejecutar orden con parámetros dinámicos
             self.broker.execute_order(
                 simbolo=self.strategy_config.get("par", "EURUSD"),
                 tipo_orden_str=senal,
@@ -114,7 +132,8 @@ class TradingEngine:
                 tp=take_profit,
                 nombre_estrategia=self.nombre_estrategia,
                 atr_apertura=df_indicadores.iloc[-1].get('ATR'),
-                strategy_config=self.strategy_config
+                strategy_config=signal_data.get('parametros_estrategia', self.strategy_config),
+                timeframe=self.timeframe
             )
 
     def _calculate_indicators(self, df_ventana):
@@ -151,3 +170,9 @@ class TradingEngine:
         self._last_indicators_size = len(df_ventana)
         
         return indicators
+    
+    def _get_timeframe_from_config(self) -> str:
+        """Determina el timeframe desde la configuración de la estrategia"""
+        timeframe_map = {0: "M1", 1: "M5", 2: "M15", 3: "M30", 4: "H1", 5: "H4"}
+        timeframe_index = self.strategy_config.get('timeframe', 2)  # Default M15
+        return timeframe_map.get(timeframe_index, "M15")

@@ -9,13 +9,14 @@ class BrokerSimulator:
     """
     Simula un broker de trading para el backtesting, compatible con el TradingEngine.
     """
-    def __init__(self, capital_inicial, riesgo_porcentaje, comision_por_lote=0.0, spread=0.0001, verbose=False):
+    def __init__(self, capital_inicial, riesgo_porcentaje, comision_por_lote=0.0, spread=0.0001, verbose=False, risk_calculator=None):
         self.capital_inicial = capital_inicial
         self.balance = capital_inicial
         self.riesgo_porcentaje = riesgo_porcentaje
         self.comision_por_lote = comision_por_lote
         self.spread = spread
         self.verbose = verbose
+        self.risk_calculator = risk_calculator  # RiskCalculator integrado
         
         self.posiciones_abiertas = []
         self.historial_operaciones = []
@@ -90,24 +91,44 @@ class BrokerSimulator:
 
         self.posiciones_abiertas = [p for p in self.posiciones_abiertas if p not in posiciones_a_cerrar]
 
-    def execute_order(self, simbolo, tipo_orden_str, sl, tp, nombre_estrategia, atr_apertura, strategy_config=None):
-        """Simula la ejecución de una orden, calculando el lote internamente."""
+    def execute_order(self, simbolo, tipo_orden_str, sl, tp, nombre_estrategia, atr_apertura, strategy_config=None, timeframe="M15"):
+        """Simula la ejecución de una orden con RiskCalculator integrado."""
         precio_entrada = self.get_current_price(simbolo, tipo_orden_str)
         
-        # Usar parámetros dinámicos de riesgo si están disponibles
-        riesgo_dinamico = self.riesgo_porcentaje
-        if strategy_config and 'riesgo_porcentaje' in strategy_config:
-            riesgo_dinamico = strategy_config['riesgo_porcentaje']
-        
-        # Simular la información del símbolo que MT5 proporcionaría
-        info_simulada = SimpleNamespace(point=0.00001, trade_tick_value=1.0, volume_step=0.01, volume_min=0.01, volume_max=100.0)
-        
-        lote_calculado = calcular_lote(
-            self.balance, riesgo_dinamico, sl, precio_entrada, info_simulada
-        )
-        if lote_calculado < info_simulada.volume_min:
-            # print(f"SIM: Lote calculado ({lote_calculado}) es menor al mínimo. Orden no ejecutada.")
-            return False
+        # Usar RiskCalculator si está disponible
+        if self.risk_calculator and strategy_config:
+            # Validar riesgo de la operación
+            distancia_sl = abs(precio_entrada - sl)
+            validacion = self.risk_calculator.validar_riesgo_operacion(
+                timeframe=timeframe,
+                lote=strategy_config.get('lote', 0.01),
+                distancia_sl=distancia_sl,
+                precio_actual=precio_entrada,
+                capital_actual=self.balance
+            )
+            
+            if not validacion.get('valido', False):
+                if self.verbose:
+                    print(f"SIM: Orden rechazada - {validacion.get('razon', 'Validación falló')}")
+                return False
+            
+            lote_calculado = validacion.get('lote_validado', strategy_config.get('lote', 0.01))
+        else:
+            # Fallback al método original
+            riesgo_dinamico = self.riesgo_porcentaje
+            if strategy_config and 'riesgo_porcentaje' in strategy_config:
+                riesgo_dinamico = strategy_config['riesgo_porcentaje']
+            
+            # Simular la información del símbolo que MT5 proporcionaría
+            info_simulada = SimpleNamespace(point=0.00001, trade_tick_value=1.0, volume_step=0.01, volume_min=0.01, volume_max=100.0)
+            
+            lote_calculado = calcular_lote(
+                self.balance, riesgo_dinamico, sl, precio_entrada, info_simulada
+            )
+            if lote_calculado < info_simulada.volume_min:
+                if self.verbose:
+                    print(f"SIM: Lote calculado ({lote_calculado}) es menor al mínimo. Orden no ejecutada.")
+                return False
 
         self.TICK_COUNTER += 1
         posicion = {

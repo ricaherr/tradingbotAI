@@ -121,42 +121,66 @@ TIMEFRAMES_CONFIG = {
         "name": "1 Minuto", 
         "velas_needed": 2000,
         "periods_per_year": 252 * 24 * 60,  # 362,880 períodos/año
-        "minutes_per_period": 1
+        "minutes_per_period": 1,
+        "risk_multiplier": 0.5,  # Menor riesgo para timeframes cortos
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 0.5,  # 0.5% máximo por operación
+        "volatility_adjustment": 1.2  # Ajuste por alta volatilidad
     },
     "M5": {
         "mt5_code": 5, 
         "name": "5 Minutos", 
         "velas_needed": 1500,
         "periods_per_year": 252 * 24 * 12,  # 72,576 períodos/año
-        "minutes_per_period": 5
+        "minutes_per_period": 5,
+        "risk_multiplier": 0.7,
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 0.8,
+        "volatility_adjustment": 1.1
     },
     "M15": {
         "mt5_code": 15, 
         "name": "15 Minutos", 
         "velas_needed": 1200,
         "periods_per_year": 252 * 24 * 4,   # 24,192 períodos/año
-        "minutes_per_period": 15
+        "minutes_per_period": 15,
+        "risk_multiplier": 1.0,  # Riesgo base
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 1.0,
+        "volatility_adjustment": 1.0
     },
     "M30": {
         "mt5_code": 30, 
         "name": "30 Minutos", 
         "velas_needed": 1000,
         "periods_per_year": 252 * 24 * 2,   # 12,096 períodos/año
-        "minutes_per_period": 30
+        "minutes_per_period": 30,
+        "risk_multiplier": 1.2,
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 1.5,
+        "volatility_adjustment": 0.9
     },
     "H1": {
         "mt5_code": 16385, 
         "name": "1 Hora", 
         "velas_needed": 800,
         "periods_per_year": 252 * 24,       # 6,048 períodos/año
-        "minutes_per_period": 60
+        "minutes_per_period": 60,
+        "risk_multiplier": 1.5,  # Mayor riesgo para timeframes largos
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 2.0,
+        "volatility_adjustment": 0.8
     },
     "H4": {
         "mt5_code": 16388, 
         "name": "4 Horas", 
         "velas_needed": 500,
         "periods_per_year": 252 * 6,        # 1,512 períodos/año
-        "minutes_per_period": 240
+        "minutes_per_period": 240,
+        "risk_multiplier": 2.0,  # Máximo riesgo para H4
+        "min_atr_periods": 14,
+        "max_risk_per_trade": 3.0,
+        "volatility_adjustment": 0.7
     }
 }
 

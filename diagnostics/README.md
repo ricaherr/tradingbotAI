@@ -43,6 +43,17 @@ Este directorio contiene scripts de diagnóstico para validar diferentes aspecto
 - Análisis de mantenibilidad
 - Recomendaciones de implementación
 
+### `diagnostic_risk_management.py`
+**Propósito**: Validación de gestión de riesgo dinámica (FASE 2)
+**Uso**: `python diagnostics/diagnostic_risk_management.py`
+**Valida**:
+- RiskCalculator y configuración por timeframe
+- Cálculo dinámico de lotes
+- SL/TP adaptativos por timeframe
+- Validación de límites de riesgo
+- Integración con strategies y backtesting
+- Consistencia entre timeframes
+
 ## CONVENCIONES
 
 ### Nomenclatura

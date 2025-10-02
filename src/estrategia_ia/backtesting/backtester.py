@@ -3,6 +3,7 @@ from estrategia_ia import config
 from estrategia_ia.core.engine import TradingEngine
 from estrategia_ia.core.data_source import HistoricalDataSource
 from estrategia_ia.trading.broker_simulator import BrokerSimulator
+from estrategia_ia.utils.risk_calculator import RiskCalculator
 
 def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False, backtest_period_years=None):
     """
@@ -31,20 +32,25 @@ def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False, ba
                 print(f"Errores en datos: {errores_datos}")
             return None
 
-    # 2. Configurar el broker simulado
+    # 2. Configurar el calculador de riesgo
+    risk_calculator = RiskCalculator(capital_inicial=config.CAPITAL_INICIAL_BACKTESTING)
+    
+    # 3. Configurar el broker simulado con RiskCalculator
     broker = BrokerSimulator(
         capital_inicial=config.CAPITAL_INICIAL_BACKTESTING,
         riesgo_porcentaje=config.RIESGO_PORCENTAJE,
         spread=0.0001, # Valor de spread añadido, futuramente configurable
-        verbose=verbose
+        verbose=verbose,
+        risk_calculator=risk_calculator  # Integrar RiskCalculator
     )
 
-    # 3. Configurar el motor de trading
+    # 4. Configurar el motor de trading con RiskCalculator
     risk_manager_config = {
         "TRAILING_ACTIVO": config.TRAILING_ACTIVO,
         "BREAK_EVEN_ACTIVO": config.BREAK_EVEN_ACTIVO,
         "BREAK_EVEN_ATR_FACTOR": config.BREAK_EVEN_ATR_FACTOR,
-        "TRAILING_ATR_FACTOR": config.TRAILING_ATR_FACTOR
+        "TRAILING_ATR_FACTOR": config.TRAILING_ATR_FACTOR,
+        "risk_calculator": risk_calculator  # Pasar RiskCalculator al motor
     }
 
     engine = TradingEngine(
@@ -55,7 +61,7 @@ def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False, ba
         verbose=verbose
     )
 
-    # 4. Ejecutar el motor y obtener el reporte
+    # 5. Ejecutar el motor y obtener el reporte
     reporte = engine.run(show_plot=show_plot)
 
     if verbose:

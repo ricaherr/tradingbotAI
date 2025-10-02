@@ -45,6 +45,8 @@ CRITERIOS OBLIGATORIOS (Todos ✅):
 □ Tests unitarios incluidos
 □ Configuración externalizada
 □ Documentación actualizada
+□ Diagnósticos relacionados ejecutados
+□ Diagnóstico específico creado (si aplica)
 ```
 
 ## ANTIPATRONES PROHIBIDOS
@@ -65,5 +67,36 @@ CRITERIOS OBLIGATORIOS (Todos ✅):
 3. **Escribir tests** primero cuando sea posible
 4. **Refactorizar** continuamente para mantener calidad
 5. **Documentar** decisiones arquitecturales importantes
+6. **Ejecutar diagnósticos** relacionados con la solución terminada
+7. **Crear diagnóstico específico** si la solución lo amerita y no existe uno equivalente
+
+## REGLAS DE DIAGNÓSTICOS (OBLIGATORIAS)
+
+### Cuándo Ejecutar Diagnósticos
+- ✅ **SIEMPRE** después de completar una solución significativa
+- ✅ **SIEMPRE** después de cambios arquitecturales importantes
+- ✅ **SIEMPRE** antes de considerar una fase como "completada"
+- ✅ Antes de hacer merge a rama principal
+- ✅ Después de refactoring mayor
+
+### Cuándo Crear Nuevo Diagnóstico
+- ✅ La solución introduce **componentes nuevos** críticos
+- ✅ La solución modifica **flujos principales** del sistema
+- ✅ **NO existe** diagnóstico que valide la misma funcionalidad
+- ✅ La solución tiene **riesgo alto** de regresión
+- ❌ **NO crear** si ya existe diagnóstico equivalente
+
+### Ubicación y Nomenclatura
+- ✅ **Ubicación**: `diagnostics/diagnostic_[componente].py`
+- ✅ **Nomenclatura**: Descriptiva y específica
+- ✅ **Estructura**: Seguir plantilla estándar del README
+- ✅ **Documentación**: Actualizar `diagnostics/README.md`
+
+### Criterios de Calidad para Diagnósticos
+- ✅ **Cobertura completa** del componente/funcionalidad
+- ✅ **Tests independientes** que no dependan de estado externo
+- ✅ **Mensajes claros** de éxito/fallo
+- ✅ **Códigos de salida** apropiados (0=éxito, 1=fallo)
+- ✅ **Validación de casos extremos**
 
 **NOTA**: Estas reglas son obligatorias para TODAS las implementaciones y deben ser seguidas sin excepción.
