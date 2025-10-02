@@ -116,12 +116,48 @@ OPTIMIZER_SETTINGS = {
 
 # --- CONFIGURACIÓN DE TIMEFRAMES ---
 TIMEFRAMES_CONFIG = {
-    "M1": {"mt5_code": 1, "name": "1 Minuto", "velas_needed": 2000},
-    "M5": {"mt5_code": 5, "name": "5 Minutos", "velas_needed": 1500},
-    "M15": {"mt5_code": 15, "name": "15 Minutos", "velas_needed": 1200},
-    "M30": {"mt5_code": 30, "name": "30 Minutos", "velas_needed": 1000},
-    "H1": {"mt5_code": 16385, "name": "1 Hora", "velas_needed": 800},
-    "H4": {"mt5_code": 16388, "name": "4 Horas", "velas_needed": 500}
+    "M1": {
+        "mt5_code": 1, 
+        "name": "1 Minuto", 
+        "velas_needed": 2000,
+        "periods_per_year": 252 * 24 * 60,  # 362,880 períodos/año
+        "minutes_per_period": 1
+    },
+    "M5": {
+        "mt5_code": 5, 
+        "name": "5 Minutos", 
+        "velas_needed": 1500,
+        "periods_per_year": 252 * 24 * 12,  # 72,576 períodos/año
+        "minutes_per_period": 5
+    },
+    "M15": {
+        "mt5_code": 15, 
+        "name": "15 Minutos", 
+        "velas_needed": 1200,
+        "periods_per_year": 252 * 24 * 4,   # 24,192 períodos/año
+        "minutes_per_period": 15
+    },
+    "M30": {
+        "mt5_code": 30, 
+        "name": "30 Minutos", 
+        "velas_needed": 1000,
+        "periods_per_year": 252 * 24 * 2,   # 12,096 períodos/año
+        "minutes_per_period": 30
+    },
+    "H1": {
+        "mt5_code": 16385, 
+        "name": "1 Hora", 
+        "velas_needed": 800,
+        "periods_per_year": 252 * 24,       # 6,048 períodos/año
+        "minutes_per_period": 60
+    },
+    "H4": {
+        "mt5_code": 16388, 
+        "name": "4 Horas", 
+        "velas_needed": 500,
+        "periods_per_year": 252 * 6,        # 1,512 períodos/año
+        "minutes_per_period": 240
+    }
 }
 
 # --- CONFIGURACIÓN DE OPTIMIZACIÓN MULTI-ESTRATEGIA ---

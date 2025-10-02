@@ -1,10 +1,35 @@
 import numpy as np
 import pandas as pd
+from ..core.metrics_calculator import CalculatorFactory
 
 class Evaluator:
-    def __init__(self, backtest_report):
+    def __init__(self, backtest_report, timeframe: str = "H1"):
+        """
+        Inicializa evaluador con reporte de backtest y timeframe.
+        
+        Args:
+            backtest_report: Reporte del backtest
+            timeframe: Timeframe usado (M1, M5, M15, M30, H1, H4)
+        """
         self.report = backtest_report
-        self.returns = pd.Series(self.report['equity_curve']).pct_change().dropna()
+        self.timeframe = timeframe
+        self.metrics_calc = CalculatorFactory.create_metrics_calculator(timeframe)
+        
+        # Usar retornos diarios si están disponibles, sino calcular desde equity_curve
+        if 'retornos_diarios' in self.report and len(self.report['retornos_diarios']) > 0:
+            self.returns = pd.Series(self.report['retornos_diarios'])
+        elif 'equity_curve' in self.report and len(self.report['equity_curve']) > 0:
+            self.returns = pd.Series(self.report['equity_curve']).pct_change().dropna()
+        else:
+            # Fallback: crear retornos sintéticos basados en profit_neto
+            profit_neto = self.report.get('profit_neto', 0)
+            capital_inicial = self.report.get('capital_inicial', 1000)
+            operaciones_totales = self.report.get('operaciones_totales', 1)
+            if operaciones_totales > 0:
+                retorno_promedio = (profit_neto / capital_inicial) / operaciones_totales
+                self.returns = pd.Series([retorno_promedio] * operaciones_totales)
+            else:
+                self.returns = pd.Series([0])
 
     def evaluate(self):
         """
@@ -22,91 +47,49 @@ class Evaluator:
         
         return evaluation_report
 
-    def _calculate_sharpe_ratio(self, risk_free_rate=0, periods_per_year=252*60*24): # Assuming M1 data, 252 trading days
+    def _calculate_sharpe_ratio(self, risk_free_rate=0):
         """
-        Calcula el Sharpe Ratio a partir de la curva de equity.
+        Calcula el Sharpe Ratio usando MetricsCalculator.
         """
-        if len(self.returns) < 2:
-            return {"sharpe_ratio": 0}
+        sharpe_ratio = self.metrics_calc.calculate_sharpe_ratio(self.returns, risk_free_rate)
+        return {"sharpe_ratio": sharpe_ratio}
 
-        mean_return = self.returns.mean()
-        std_dev_return = self.returns.std()
-
-        if std_dev_return == 0:
-            return {"sharpe_ratio": np.inf if mean_return > 0 else 0}
-
-        sharpe_ratio = (mean_return - risk_free_rate) / std_dev_return
-        annualized_sharpe_ratio = sharpe_ratio * np.sqrt(periods_per_year)
-
-        return {"sharpe_ratio": annualized_sharpe_ratio}
-
-    def _calculate_sortino_ratio(self, risk_free_rate=0, periods_per_year=252*60*24):
+    def _calculate_sortino_ratio(self, risk_free_rate=0):
         """
-        Calcula el Sortino Ratio, que solo penaliza la volatilidad a la baja.
+        Calcula el Sortino Ratio usando MetricsCalculator.
         """
-        if len(self.returns) < 2:
-            return {"sortino_ratio": 0}
+        sortino_ratio = self.metrics_calc.calculate_sortino_ratio(self.returns, risk_free_rate)
+        return {"sortino_ratio": sortino_ratio}
 
-        mean_return = self.returns.mean()
-        
-        # Calcular la desviación estándar solo de los retornos negativos
-        negative_returns = self.returns[self.returns < 0]
-        downside_std = negative_returns.std()
-
-        if downside_std == 0:
-            return {"sortino_ratio": np.inf if mean_return > 0 else 0}
-
-        sortino_ratio = (mean_return - risk_free_rate) / downside_std
-        annualized_sortino_ratio = sortino_ratio * np.sqrt(periods_per_year)
-
-        return {"sortino_ratio": annualized_sortino_ratio}
-
-    def _calculate_calmar_ratio(self, periods_per_year=252*60*24):
+    def _calculate_calmar_ratio(self):
         """
-        Calcula el Calmar Ratio (Retorno Anualizado / Máximo Drawdown).
+        Calcula el Calmar Ratio usando MetricsCalculator.
         """
-        if len(self.returns) < 2 or self.report['max_drawdown'] == 0:
-            return {"calmar_ratio": 0}
-
-        # Calcular el retorno anualizado
         total_return = (self.report['capital_final'] / self.report['capital_inicial']) - 1
-        num_periods = len(self.report['equity_curve'])
+        max_drawdown = self.report.get('max_drawdown', 0)
+        num_periods = len(self.report.get('equity_curve', []))
         
-        # Evitar valores inválidos
-        if num_periods <= 0 or total_return <= -1:
-            return {"calmar_ratio": 0}
-        
-        try:
-            annualized_return = (1 + total_return) ** (periods_per_year / num_periods) - 1
-        except (ValueError, OverflowError, ZeroDivisionError):
-            return {"calmar_ratio": 0}
-
-        calmar_ratio = annualized_return / self.report['max_drawdown']
-
+        calmar_ratio = self.metrics_calc.calculate_calmar_ratio(total_return, max_drawdown, num_periods)
         return {"calmar_ratio": calmar_ratio}
 
     def _calculate_win_loss_ratio(self):
         """
-        Calcula la relación entre la ganancia promedio y la pérdida promedio.
+        Calcula la relación entre la ganancia promedio y la pérdida promedio usando MetricsCalculator.
         """
         ganancia_bruta = self.report.get('ganancia_bruta', 0)
         perdida_bruta = self.report.get('perdida_bruta', 0)
         operaciones_ganadoras = self.report.get('operaciones_ganadoras', 0)
         operaciones_perdedoras = self.report.get('operaciones_perdedoras', 0)
-
-        if operaciones_ganadoras == 0 or operaciones_perdedoras == 0:
-            return {"win_loss_ratio": 0}
-
-        avg_win = ganancia_bruta / operaciones_ganadoras
-        avg_loss = abs(perdida_bruta / operaciones_perdedoras)
-
-        win_loss_ratio = avg_win / avg_loss if avg_loss != 0 else np.inf
-
+        
+        win_loss_ratio = self.metrics_calc.calculate_win_loss_ratio(
+            ganancia_bruta, perdida_bruta, operaciones_ganadoras, operaciones_perdedoras
+        )
+        
         return {"win_loss_ratio": win_loss_ratio}
 
     def _calculate_monthly_metrics(self):
         """
-        Calcula métricas de rentabilidad mensual.
+        Calcula métricas de rentabilidad mensual usando MetricsCalculator.
         """
         capital_inicial = self.report.get('capital_inicial', 1000)
         profit_neto = self.report.get('profit_neto', 0)
@@ -128,11 +111,8 @@ class Evaluator:
                 # Usar 90 días como default (3 meses)
                 periodo_dias = 90
         
-        # Calcular ROI
-        roi_total_pct = (profit_neto / capital_inicial) * 100 if capital_inicial > 0 else 0
-        periodo_meses = periodo_dias / 30.44  # Promedio días por mes
-        roi_mensual_pct = roi_total_pct / periodo_meses if periodo_meses > 0 else 0
-        roi_anual_pct = roi_mensual_pct * 12
+        # Calcular ROI usando MetricsCalculator
+        roi_metrics = self.metrics_calc.calculate_monthly_roi(profit_neto, capital_inicial, periodo_dias)
         
         # Calcular win rate
         operaciones_totales = self.report.get('operaciones_totales', 0)
@@ -143,12 +123,10 @@ class Evaluator:
         max_drawdown_pct = abs(self.report.get('max_drawdown_percent', 0))
         
         return {
-            'roi_total_pct': roi_total_pct,
-            'roi_mensual_pct': roi_mensual_pct, 
-            'roi_anual_pct': roi_anual_pct,
+            **roi_metrics,
             'win_rate_pct': win_rate_pct,
             'max_drawdown_pct': max_drawdown_pct,
-            'periodo_meses': periodo_meses
+            'periodo_meses': periodo_dias / 30.44
         }
     
     def _evaluate_profitability(self, min_monthly_return=0.2, max_drawdown=25.0, min_win_rate=30.0):

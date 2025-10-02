@@ -7,12 +7,15 @@ from datetime import datetime
 def timeframe_to_str(timeframe):
     """Convierte un timeframe de MT5 a un string legible."""
     mapa = {
-        mt5.TIMEFRAME_M1: "M1",
-        mt5.TIMEFRAME_M5: "M5",
-        mt5.TIMEFRAME_H1: "H1",
-        mt5.TIMEFRAME_D1: "D1",
+        1: "M1",
+        5: "M5", 
+        15: "M15",
+        30: "M30",
+        16385: "H1",  # mt5.TIMEFRAME_H1
+        16388: "H4",  # mt5.TIMEFRAME_H4
+        16408: "D1",  # mt5.TIMEFRAME_D1
     }
-    return mapa.get(timeframe, "desconocido")
+    return mapa.get(timeframe, f"TF_{timeframe}")
 
 def asegurar_datos_historicos(simbolo, timeframe, num_velas, min_velas, reintentos=3, max_age_days=7):
     """
@@ -31,7 +34,8 @@ def asegurar_datos_historicos(simbolo, timeframe, num_velas, min_velas, reintent
     Returns:
         str|None: La ruta al archivo de datos si es válido, o None si falla.
     """
-    nombre_archivo = f"{simbolo}_{timeframe_to_str(timeframe)}.csv"
+    timeframe_str = timeframe_to_str(timeframe)
+    nombre_archivo = f"{simbolo}_{timeframe_str}.csv"
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
     output_path = os.path.join(project_root, "data", "datos_historicos", nombre_archivo)
 

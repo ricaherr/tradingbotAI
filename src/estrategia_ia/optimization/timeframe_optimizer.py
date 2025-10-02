@@ -253,8 +253,9 @@ class TimeframeOptimizer:
             config["optimizable_params"] = config["optimizable_params"].copy()
             del config["optimizable_params"]["timeframe"]
         
-        # Fijar timeframe específico
-        timeframe_index = self.timeframes.index(timeframe)
+        # Fijar timeframe específico usando el índice correcto de TIMEFRAMES_CONFIG
+        timeframe_keys = list(TIMEFRAMES_CONFIG.keys())
+        timeframe_index = timeframe_keys.index(timeframe)
         config["fixed_timeframe"] = timeframe_index
         config["timeframe_name"] = timeframe
         config["backtest_days"] = self.backtest_days

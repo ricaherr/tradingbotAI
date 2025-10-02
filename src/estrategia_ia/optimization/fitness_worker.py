@@ -28,27 +28,20 @@ def run_fitness_calculation(args):
         strategy_config = copy.deepcopy(strategy_config_base)
         strategy_config.update(individual_params)
         
-        # Manejar timeframe (fijo o dinámico)
+        # Usar el archivo de datos que ya se pasó (ya contiene el timeframe correcto)
         current_data_file = data_file_path
         
-        # Determinar timeframe
-        if 'fixed_timeframe' in strategy_config_base:
-            # Timeframe fijo desde configuración
-            timeframe_idx = strategy_config_base['fixed_timeframe']
-        elif 'timeframe' in individual_params:
-            # Timeframe dinámico desde individuo
+        # Para modo fixed_timeframe, usar siempre el archivo que se pasó
+        # Solo cambiar archivo si hay timeframe dinámico en individual_params
+        if 'timeframe' in individual_params and 'fixed_timeframe' not in strategy_config_base:
             timeframe_idx = int(individual_params['timeframe'])
-        else:
-            timeframe_idx = None
-        
-        if timeframe_idx is not None:
             timeframe_keys = list(TIMEFRAMES_CONFIG.keys())
             
             if 0 <= timeframe_idx < len(timeframe_keys):
                 timeframe_key = timeframe_keys[timeframe_idx]
                 timeframe_config = TIMEFRAMES_CONFIG[timeframe_key]
                 
-                # Obtener datos para el timeframe específico
+                # Solo obtener datos diferentes si es necesario
                 current_data_file = asegurar_datos_historicos(
                     simbolo="EURUSD",
                     timeframe=timeframe_config['mt5_code'],
