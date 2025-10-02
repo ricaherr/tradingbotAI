@@ -4,6 +4,8 @@ import copy
 import random
 import signal
 import logging
+import time
+from datetime import datetime
 from multiprocessing import Pool, cpu_count
 
 # Add src directory to path to allow imports to work
@@ -15,6 +17,7 @@ if src_path not in sys.path:
 from estrategia_ia.backtesting.backtester import run_backtest
 from estrategia_ia.optimization.evaluator import Evaluator
 from estrategia_ia.optimization.adjuster import Adjuster
+from estrategia_ia.optimization.fitness_worker import run_fitness_calculation
 from estrategia_ia import config
 
 
@@ -26,45 +29,7 @@ def worker_init():
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 
-# --- Helper function for multiprocessing ---
-def run_fitness_calculation(args):
-    """
-    Función aislada para ser usada por multiprocessing.Pool.
-    Ejecuta un backtest y calcula el fitness para un único individuo.
-    """
-    try:
-        individual_params, strategy_config_base, data_file_path, backtest_period_years, test_mode = args
-
-        # Re-importar dependencias es una buena práctica para evitar problemas de pickling
-        from estrategia_ia.backtesting.backtester import run_backtest
-        from estrategia_ia.optimization.evaluator import Evaluator
-        import copy
-        import logging
-
-        # Lógica de _run_backtest
-        strategy_config = copy.deepcopy(strategy_config_base)
-        strategy_config.update(individual_params)
-
-        report = run_backtest(
-            data_file_path,
-            strategy_config,
-            show_plot=False,
-            verbose=False,
-            backtest_period_years=backtest_period_years
-        )
-
-        # Lógica de _calculate_fitness
-        if not report or report.get('operaciones_totales', 0) < 1:
-            return -float('inf')
-
-        evaluator = Evaluator(report)
-        evaluation = evaluator.evaluate()
-        # Usar Sharpe Ratio como fitness. Podría ser otra métrica.
-        return evaluation.get('sharpe_ratio', -float('inf'))
-    except KeyboardInterrupt:
-        # This is to prevent the worker from printing a traceback.
-        # The main process will handle the cleanup.
-        sys.exit(1)
+# La función run_fitness_calculation ahora está en fitness_worker.py
 
 
 class IntelligentOptimizer:
@@ -185,12 +150,17 @@ class GeneticOptimizer:
         self.convergence_history = []
 
     def run_optimization(self):
-        print(f"Iniciando optimización genética para la estrategia: {self.strategy_config_base['nombre']}")
-
+        start_time = datetime.now()
+        optimization_start = time.time()
+        print(f"[{start_time.strftime('%H:%M:%S')}] Iniciando optimización genética para: {self.strategy_config_base['nombre']}")
+        print(f"Configuración: {self.population_size} individuos × {self.generations} generaciones = {self.population_size * self.generations} evaluaciones")
+        
         population = self._create_initial_population()
 
         for gen in range(self.generations):
-            print(f"  Generación {gen + 1}/{self.generations}")
+            gen_start_time = time.time()
+            elapsed_total = (gen_start_time - optimization_start) / 60
+            print(f"\n  [{datetime.now().strftime('%H:%M:%S')}] Generación {gen + 1}/{self.generations} (Tiempo transcurrido: {elapsed_total:.1f}m)")
 
             valid_population = [ind for ind in population if ind is not None]
 
@@ -201,26 +171,51 @@ class GeneticOptimizer:
             self.convergence_history.append(self.best_fitness if self.best_fitness > -float('inf') else 0)
 
             population = self._create_next_generation(valid_population, fitness_scores)
+            
+            gen_elapsed = (time.time() - gen_start_time) / 60
             if fitness_scores:
-                print(f"  Mejor Fitness de la Generación: {max(fitness_scores):.2f}")
+                print(f"    Mejor Fitness: {max(fitness_scores):.2f} | Tiempo generación: {gen_elapsed:.1f}m")
+                # Estimar tiempo restante
+                if gen > 0:
+                    avg_time_per_gen = elapsed_total / (gen + 1)
+                    remaining_gens = self.generations - (gen + 1)
+                    estimated_remaining = avg_time_per_gen * remaining_gens
+                    print(f"    Tiempo estimado restante: {estimated_remaining:.1f}m")
             else:
-                print("  No se encontraron individuos válidos en esta generación.")
+                print("    No se encontraron individuos válidos en esta generación.")
 
-        print("\n--- Optimización Genética Finalizada ---")
+        total_elapsed = (time.time() - optimization_start) / 60
+        end_time = datetime.now()
+        print(f"\n--- Optimización Genética Finalizada [{end_time.strftime('%H:%M:%S')}] ---")
+        print(f"Tiempo total: {total_elapsed:.1f} minutos")
         if self.best_individual:
             print("Mejor configuración encontrada:")
             for param, value in self.best_individual.items():
-                print(f"  {param}: {value}")
+                if param == 'timeframe':
+                    from estrategia_ia.config import TIMEFRAMES_CONFIG
+                    timeframe_keys = list(TIMEFRAMES_CONFIG.keys())
+                    if 0 <= int(value) < len(timeframe_keys):
+                        tf_name = TIMEFRAMES_CONFIG[timeframe_keys[int(value)]]['name']
+                        print(f"  {param}: {value} ({tf_name})")
+                    else:
+                        print(f"  {param}: {value}")
+                else:
+                    print(f"  {param}: {value}")
 
             if not self.best_report:
                 self.best_report = self._run_backtest(self.best_individual)
 
             if self.best_report:
+                # Agregar backtest_days al reporte si está disponible
+                if 'backtest_days' in self.strategy_config_base:
+                    self.best_report['periodo_dias'] = self.strategy_config_base['backtest_days']
+                
                 evaluator = Evaluator(self.best_report)
                 evaluation_report = evaluator.evaluate()
 
                 print(f"Mejor Fitness (Sharpe Ratio): {evaluation_report.get('sharpe_ratio', 0):.2f}")
                 print(f"Profit Neto: ${evaluation_report.get('profit_neto', 0):.2f}")
+                print(f"ROI Mensual: {evaluation_report.get('roi_mensual_pct', 0):.2f}%")
                 print(f"Sortino Ratio: {evaluation_report.get('sortino_ratio', 0):.2f}")
                 print(f"Calmar Ratio: {evaluation_report.get('calmar_ratio', 0):.2f}")
                 print(f"Win/Loss Ratio: {evaluation_report.get('win_loss_ratio', 0):.2f}")
@@ -273,9 +268,21 @@ class GeneticOptimizer:
         """Evalúa una población usando procesamiento paralelo con fallback secuencial."""
         
         # En modo test o poblaciones pequeñas, usar evaluación secuencial directamente
-        if self.test_mode or self.population_size <= 10:
+        if self.test_mode or self.population_size <= 10 or self.cpu_core_usage == 0.0:
+            eval_start = time.time()
             print(f"    Evaluando {len(valid_population)} individuos (secuencial)...")
-            return [self._calculate_fitness(ind) for ind in valid_population]
+            fitness_scores = []
+            for i, individual in enumerate(valid_population):
+                ind_start = time.time()
+                fitness = self._calculate_fitness(individual)
+                fitness_scores.append(fitness)
+                
+                # Mostrar progreso cada 5 individuos con tiempo
+                if (i + 1) % 5 == 0 or (i + 1) == len(valid_population):
+                    elapsed = (time.time() - eval_start) / 60
+                    avg_time = elapsed / (i + 1) * len(valid_population)
+                    print(f"      Progreso: {i + 1}/{len(valid_population)} | {elapsed:.1f}m transcurridos | ETA: {avg_time:.1f}m")
+            return fitness_scores
         
         # Para poblaciones grandes, intentar multiprocessing
         args_for_pool = [
@@ -287,13 +294,23 @@ class GeneticOptimizer:
             total_cores = cpu_count()
             num_cores = max(1, int(total_cores * self.cpu_core_usage))
             
+            eval_start = time.time()
             print(f"    Evaluando {len(valid_population)} individuos (paralelo con {num_cores} cores)...")
             
             with Pool(processes=num_cores, initializer=worker_init) as pool:
                 result = pool.map_async(run_fitness_calculation, args_for_pool)
 
+                # Mostrar progreso mientras espera
+                check_count = 0
                 while not result.ready():
-                    result.wait(timeout=1)
+                    result.wait(timeout=10)
+                    check_count += 1
+                    elapsed = (time.time() - eval_start) / 60
+                    print(f"      Procesando en paralelo... ({elapsed:.1f}m transcurridos)")
+                    
+                    # Si toma más de 5 minutos, mostrar advertencia
+                    if elapsed > 5 and check_count % 3 == 0:
+                        print(f"      [ADVERTENCIA] Evaluación tomando más tiempo del esperado: {elapsed:.1f}m")
 
                 return result.get()
 
@@ -306,7 +323,13 @@ class GeneticOptimizer:
         except Exception as e:
             print(f"  Error durante la evaluación en paralelo: {e}")
             print("  Volviendo a evaluación secuencial para esta generación.")
-            return [self._calculate_fitness(ind) for ind in valid_population]
+            fitness_scores = []
+            for i, individual in enumerate(valid_population):
+                fitness = self._calculate_fitness(individual)
+                fitness_scores.append(fitness)
+                if (i + 1) % 5 == 0:
+                    print(f"      Progreso fallback: {i + 1}/{len(valid_population)}")
+            return fitness_scores
     
     def _create_initial_population(self):
         population = []
@@ -330,6 +353,10 @@ class GeneticOptimizer:
         report = self._run_backtest(individual)
         if not report or report['operaciones_totales'] < 1:
             return -float('inf')
+
+        # Agregar backtest_days al reporte si está disponible
+        if 'backtest_days' in self.strategy_config_base:
+            report['periodo_dias'] = self.strategy_config_base['backtest_days']
 
         evaluator = Evaluator(report)
         evaluation = evaluator.evaluate()
@@ -380,13 +407,18 @@ class GeneticOptimizer:
     def _run_backtest(self, individual_params):
         strategy_config = copy.deepcopy(self.strategy_config_base)
         strategy_config.update(individual_params)
+        
+        # Convertir días a años si está especificado
+        backtest_years = self.backtest_period_years
+        if 'backtest_days' in strategy_config:
+            backtest_years = strategy_config['backtest_days'] / 365.25
 
         report = run_backtest(
             self.data_file_path,
             strategy_config,
             show_plot=False,
             verbose=False,
-            backtest_period_years=self.backtest_period_years
+            backtest_period_years=backtest_years
         )
         return report
 
