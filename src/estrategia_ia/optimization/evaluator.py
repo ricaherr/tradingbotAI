@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from ..core.metrics_calculator import CalculatorFactory
+from ..utils.performance_calculator import PerformanceCalculator
 
 class Evaluator:
     def __init__(self, backtest_report, timeframe: str = "H1"):
@@ -14,6 +15,7 @@ class Evaluator:
         self.report = backtest_report
         self.timeframe = timeframe
         self.metrics_calc = CalculatorFactory.create_metrics_calculator(timeframe)
+        self.performance_calc = PerformanceCalculator(timeframe)  # Calculadora unificada
         
         # Usar retornos diarios si están disponibles, sino calcular desde equity_curve
         if 'retornos_diarios' in self.report and len(self.report['retornos_diarios']) > 0:
@@ -49,27 +51,27 @@ class Evaluator:
 
     def _calculate_sharpe_ratio(self, risk_free_rate=0):
         """
-        Calcula el Sharpe Ratio usando MetricsCalculator.
+        Calcula el Sharpe Ratio usando PerformanceCalculator unificado.
         """
-        sharpe_ratio = self.metrics_calc.calculate_sharpe_ratio(self.returns, risk_free_rate)
+        sharpe_ratio = self.performance_calc.calculate_sharpe_ratio(self.returns, risk_free_rate)
         return {"sharpe_ratio": sharpe_ratio}
 
     def _calculate_sortino_ratio(self, risk_free_rate=0):
         """
-        Calcula el Sortino Ratio usando MetricsCalculator.
+        Calcula el Sortino Ratio usando PerformanceCalculator unificado.
         """
-        sortino_ratio = self.metrics_calc.calculate_sortino_ratio(self.returns, risk_free_rate)
+        sortino_ratio = self.performance_calc.calculate_sortino_ratio(self.returns, risk_free_rate)
         return {"sortino_ratio": sortino_ratio}
 
     def _calculate_calmar_ratio(self):
         """
-        Calcula el Calmar Ratio usando MetricsCalculator.
+        Calcula el Calmar Ratio usando PerformanceCalculator unificado.
         """
         total_return = (self.report['capital_final'] / self.report['capital_inicial']) - 1
         max_drawdown = self.report.get('max_drawdown', 0)
         num_periods = len(self.report.get('equity_curve', []))
         
-        calmar_ratio = self.metrics_calc.calculate_calmar_ratio(total_return, max_drawdown, num_periods)
+        calmar_ratio = self.performance_calc.calculate_calmar_ratio(total_return, max_drawdown, num_periods)
         return {"calmar_ratio": calmar_ratio}
 
     def _calculate_win_loss_ratio(self):

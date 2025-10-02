@@ -4,12 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from types import SimpleNamespace
 from estrategia_ia.core.order_calculations import calcular_lote
+from estrategia_ia.utils.performance_calculator import PerformanceCalculator
 
 class BrokerSimulator:
     """
     Simula un broker de trading para el backtesting, compatible con el TradingEngine.
     """
-    def __init__(self, capital_inicial, riesgo_porcentaje, comision_por_lote=0.0, spread=0.0001, verbose=False, risk_calculator=None):
+    def __init__(self, capital_inicial, riesgo_porcentaje, comision_por_lote=0.0, spread=0.0001, verbose=False, risk_calculator=None, timeframe="M15"):
         self.capital_inicial = capital_inicial
         self.balance = capital_inicial
         self.riesgo_porcentaje = riesgo_porcentaje
@@ -17,6 +18,8 @@ class BrokerSimulator:
         self.spread = spread
         self.verbose = verbose
         self.risk_calculator = risk_calculator  # RiskCalculator integrado
+        self.timeframe = timeframe
+        self.performance_calc = PerformanceCalculator(timeframe)  # PerformanceCalculator unificado
         
         self.posiciones_abiertas = []
         self.historial_operaciones = []
@@ -186,11 +189,22 @@ class BrokerSimulator:
         drawdown_series = (equity_series - peak_series) / peak_series
         max_drawdown = abs(drawdown_series.min()) if not drawdown_series.empty else 0
 
-        # Cálculo de Sharpe, Sortino, Calmar
-        returns = equity_series.pct_change().dropna()
-        sharpe_ratio = returns.mean() / returns.std() * np.sqrt(252) if returns.std() > 0 else 0 # Asumiendo datos diarios
-        sortino_ratio = returns.mean() / returns[returns < 0].std() * np.sqrt(252) if len(returns[returns < 0]) > 1 else 0
-        calmar_ratio = (profit_total / self.capital_inicial) / max_drawdown if max_drawdown > 0 else 0
+        # Usar PerformanceCalculator para métricas consistentes
+        temp_reporte = {
+            'capital_inicial': self.capital_inicial,
+            'capital_final': self.balance,
+            'equity_curve': self.equity_curve,
+            'ganancia_bruta': ganancia_bruta,
+            'perdida_bruta': perdida_bruta,
+            'operaciones_ganadoras': ops_ganadoras,
+            'operaciones_perdedoras': ops_perdedoras
+        }
+        
+        performance_metrics = self.performance_calc.calculate_comprehensive_metrics(temp_reporte)
+        sharpe_ratio = performance_metrics['sharpe_ratio']
+        sortino_ratio = performance_metrics['sortino_ratio']
+        calmar_ratio = performance_metrics['calmar_ratio']
+        max_drawdown = performance_metrics['max_drawdown']  # Actualizar con valor correcto
         
         # Win/Loss Ratio
         avg_win = ganancia_bruta / ops_ganadoras if ops_ganadoras > 0 else 0
@@ -206,7 +220,9 @@ class BrokerSimulator:
             "max_drawdown": max_drawdown, "sharpe_ratio": sharpe_ratio,
             "sortino_ratio": sortino_ratio, "calmar_ratio": calmar_ratio,
             "win_loss_ratio": win_loss_ratio,
-            "historial_operaciones": self.historial_operaciones, "equity_curve": self.equity_curve
+            "historial_operaciones": self.historial_operaciones, "equity_curve": self.equity_curve,
+            "timeframe": self.timeframe,  # Agregar timeframe al reporte
+            **performance_metrics  # Incluir todas las métricas calculadas
         }
 
         if verbose:

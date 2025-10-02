@@ -35,13 +35,19 @@ def run_backtest(file_path, estrategia_config, show_plot=True, verbose=False, ba
     # 2. Configurar el calculador de riesgo
     risk_calculator = RiskCalculator(capital_inicial=config.CAPITAL_INICIAL_BACKTESTING)
     
-    # 3. Configurar el broker simulado con RiskCalculator
+    # 3. Configurar el broker simulado con RiskCalculator y timeframe
+    # Determinar timeframe desde estrategia_config
+    timeframe_map = {0: "M1", 1: "M5", 2: "M15", 3: "M30", 4: "H1", 5: "H4"}
+    timeframe_index = estrategia_config.get('timeframe', estrategia_config.get('fixed_timeframe', 2))
+    timeframe = timeframe_map.get(timeframe_index, "M15")
+    
     broker = BrokerSimulator(
         capital_inicial=config.CAPITAL_INICIAL_BACKTESTING,
         riesgo_porcentaje=config.RIESGO_PORCENTAJE,
         spread=0.0001, # Valor de spread añadido, futuramente configurable
         verbose=verbose,
-        risk_calculator=risk_calculator  # Integrar RiskCalculator
+        risk_calculator=risk_calculator,  # Integrar RiskCalculator
+        timeframe=timeframe  # Pasar timeframe para cálculos correctos
     )
 
     # 4. Configurar el motor de trading con RiskCalculator

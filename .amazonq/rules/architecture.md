@@ -45,6 +45,8 @@ CRITERIOS OBLIGATORIOS (Todos ✅):
 □ Tests unitarios incluidos
 □ Configuración externalizada
 □ Documentación actualizada
+□ Tests existentes actualizados (si aplica)
+□ Validación con diagnostic_architecture ejecutada
 □ Diagnósticos relacionados ejecutados
 □ Diagnóstico específico creado (si aplica)
 ```
@@ -67,8 +69,10 @@ CRITERIOS OBLIGATORIOS (Todos ✅):
 3. **Escribir tests** primero cuando sea posible
 4. **Refactorizar** continuamente para mantener calidad
 5. **Documentar** decisiones arquitecturales importantes
-6. **Ejecutar diagnósticos** relacionados con la solución terminada
-7. **Crear diagnóstico específico** si la solución lo amerita y no existe uno equivalente
+6. **Actualizar tests existentes** si se modifican componentes
+7. **Validar con diagnostic_architecture** antes de finalizar
+8. **Ejecutar diagnósticos** relacionados con la solución terminada
+9. **Crear diagnóstico específico** si la solución lo amerita y no existe uno equivalente
 
 ## REGLAS DE DIAGNÓSTICOS (OBLIGATORIAS)
 
@@ -98,5 +102,25 @@ CRITERIOS OBLIGATORIOS (Todos ✅):
 - ✅ **Mensajes claros** de éxito/fallo
 - ✅ **Códigos de salida** apropiados (0=éxito, 1=fallo)
 - ✅ **Validación de casos extremos**
+
+## REGLAS DE TESTING (OBLIGATORIAS)
+
+### Ubicación y Nomenclatura de Tests
+- ✅ **Ubicación**: Tests permanentes DEBEN crearse en carpeta `tests/`
+- ✅ **Nomenclatura**: Archivos DEBEN tener prefijo `test_` (ej: `test_risk_calculator.py`)
+- ✅ **Estructura**: Seguir patrón `tests/test_[componente].py`
+- ✅ **Cobertura**: Tests para TODA lógica crítica y cálculos financieros
+
+### Mantenimiento de Tests
+- ✅ **Actualización obligatoria**: Si un componente se modifica, sus tests DEBEN actualizarse
+- ✅ **Sincronización**: Tests deben reflejar el comportamiento actual del código
+- ✅ **Validación**: Tests modificados deben ejecutarse y pasar antes del commit
+- ✅ **Regresión**: Mantener tests existentes para prevenir regresiones
+
+### Validación Arquitectural Obligatoria
+- ✅ **diagnostic_architecture**: SIEMPRE ejecutar antes de finalizar cualquier propuesta
+- ✅ **Puntuación mínima**: Debe obtener ≥ 7.0/10 para ser aceptable
+- ✅ **Corrección obligatoria**: Si falla validación, corregir antes de continuar
+- ✅ **Documentación**: Incluir resultado de validación en entrega
 
 **NOTA**: Estas reglas son obligatorias para TODAS las implementaciones y deben ser seguidas sin excepción.

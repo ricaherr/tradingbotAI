@@ -1,1 +1,1 @@
-# Tests para el sistema de trading con IA
+# Tests package
