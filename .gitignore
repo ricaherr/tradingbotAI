@@ -8,13 +8,25 @@ __pycache__/
 venv/
 env/
 
-# Archivos de log y bases de datos
-*.log
+# Archivos de datos y cache
+*.json
 *.csv
+*.log
+data/
+resultados/
+logs/
+cache/
 
-# Archivos de configuración local y secretos (¡MUY IMPORTANTE!)
-# Si decides mover tus secretos a un archivo .env
+# Archivos de configuración local y secretos
 .env*
+config_local.py
+secrets.py
 
 # Archivos del sistema operativo
 .DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
