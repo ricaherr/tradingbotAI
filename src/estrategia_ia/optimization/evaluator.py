@@ -16,6 +16,8 @@ class Evaluator:
         evaluation_report.update(self._calculate_sortino_ratio())
         evaluation_report.update(self._calculate_calmar_ratio())
         evaluation_report.update(self._calculate_win_loss_ratio())
+        evaluation_report.update(self._calculate_monthly_metrics())
+        evaluation_report.update(self._evaluate_profitability())
         evaluation_report.update(self._identify_patterns())
         
         return evaluation_report
@@ -69,7 +71,15 @@ class Evaluator:
         # Calcular el retorno anualizado
         total_return = (self.report['capital_final'] / self.report['capital_inicial']) - 1
         num_periods = len(self.report['equity_curve'])
-        annualized_return = (1 + total_return) ** (periods_per_year / num_periods) - 1
+        
+        # Evitar valores inválidos
+        if num_periods <= 0 or total_return <= -1:
+            return {"calmar_ratio": 0}
+        
+        try:
+            annualized_return = (1 + total_return) ** (periods_per_year / num_periods) - 1
+        except (ValueError, OverflowError, ZeroDivisionError):
+            return {"calmar_ratio": 0}
 
         calmar_ratio = annualized_return / self.report['max_drawdown']
 
@@ -94,6 +104,89 @@ class Evaluator:
 
         return {"win_loss_ratio": win_loss_ratio}
 
+    def _calculate_monthly_metrics(self):
+        """
+        Calcula métricas de rentabilidad mensual.
+        """
+        capital_inicial = self.report.get('capital_inicial', 1000)
+        profit_neto = self.report.get('profit_neto', 0)
+        
+        # Obtener período de diferentes fuentes posibles
+        periodo_dias = self.report.get('periodo_dias')
+        if periodo_dias is None:
+            # Calcular desde fechas si están disponibles
+            fecha_inicio = self.report.get('fecha_inicio')
+            fecha_fin = self.report.get('fecha_fin')
+            if fecha_inicio and fecha_fin:
+                from datetime import datetime
+                if isinstance(fecha_inicio, str):
+                    fecha_inicio = datetime.fromisoformat(fecha_inicio.replace('Z', '+00:00'))
+                if isinstance(fecha_fin, str):
+                    fecha_fin = datetime.fromisoformat(fecha_fin.replace('Z', '+00:00'))
+                periodo_dias = (fecha_fin - fecha_inicio).days
+            else:
+                # Usar 90 días como default (3 meses)
+                periodo_dias = 90
+        
+        # Calcular ROI
+        roi_total_pct = (profit_neto / capital_inicial) * 100 if capital_inicial > 0 else 0
+        periodo_meses = periodo_dias / 30.44  # Promedio días por mes
+        roi_mensual_pct = roi_total_pct / periodo_meses if periodo_meses > 0 else 0
+        roi_anual_pct = roi_mensual_pct * 12
+        
+        # Calcular win rate
+        operaciones_totales = self.report.get('operaciones_totales', 0)
+        operaciones_ganadoras = self.report.get('operaciones_ganadoras', 0)
+        win_rate_pct = (operaciones_ganadoras / operaciones_totales * 100) if operaciones_totales > 0 else 0
+        
+        # Max drawdown en porcentaje
+        max_drawdown_pct = abs(self.report.get('max_drawdown_percent', 0))
+        
+        return {
+            'roi_total_pct': roi_total_pct,
+            'roi_mensual_pct': roi_mensual_pct, 
+            'roi_anual_pct': roi_anual_pct,
+            'win_rate_pct': win_rate_pct,
+            'max_drawdown_pct': max_drawdown_pct,
+            'periodo_meses': periodo_meses
+        }
+    
+    def _evaluate_profitability(self, min_monthly_return=0.2, max_drawdown=25.0, min_win_rate=30.0):
+        """
+        Evalúa si la estrategia cumple criterios de rentabilidad.
+        """
+        roi_mensual = getattr(self, '_roi_mensual_pct', 0)
+        max_dd = getattr(self, '_max_drawdown_pct', 0) 
+        win_rate = getattr(self, '_win_rate_pct', 0)
+        sharpe = self._calculate_sharpe_ratio().get('sharpe_ratio', 0)
+        operaciones = self.report.get('operaciones_totales', 0)
+        
+        # Recalcular si no están disponibles
+        if roi_mensual == 0:
+            monthly_metrics = self._calculate_monthly_metrics()
+            roi_mensual = monthly_metrics['roi_mensual_pct']
+            max_dd = monthly_metrics['max_drawdown_pct']
+            win_rate = monthly_metrics['win_rate_pct']
+        
+        criterios = {
+            'roi_mensual_ok': roi_mensual >= min_monthly_return,
+            'drawdown_ok': max_dd <= max_drawdown,
+            'win_rate_ok': win_rate >= min_win_rate,
+            'sharpe_ok': sharpe > 0.5,  # Más realista
+            'operaciones_ok': operaciones >= 10  # Menos estricto
+        }
+        
+        criterios_cumplidos = sum(criterios.values())
+        # Priorizar ROI positivo sobre criterios estrictos
+        viable = roi_mensual > 0 and criterios_cumplidos >= 3  # 3 de 5 criterios + ROI positivo
+        score = (criterios_cumplidos / len(criterios)) * 100
+        
+        return {
+            'viable': viable,
+            'profitability_score': score,
+            'criterios_rentabilidad': criterios
+        }
+    
     def _identify_patterns(self):
         """
         Identifica patrones básicos en las operaciones. (Placeholder)
@@ -129,5 +222,11 @@ if __name__ == '__main__':
 
     print("--- Reporte de Evaluación ---")
     for key, value in evaluation.items():
-        if key not in ["historial_operaciones", "equity_curve"]:
-            print(f"{key}: {value:.2f}" if isinstance(value, (int, float)) else f"{key}: {value}")
+        if key not in ["historial_operaciones", "equity_curve", "criterios_rentabilidad"]:
+            if isinstance(value, (int, float)):
+                print(f"{key}: {value:.2f}")
+            else:
+                print(f"{key}: {value}")
+    
+    print(f"\nViable: {'SÍ' if evaluation['viable'] else 'NO'}")
+    print(f"Score: {evaluation['profitability_score']:.1f}%")
